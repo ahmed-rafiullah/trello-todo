@@ -15,8 +15,8 @@ const {
   Model
 } = require('objection');
 
-// config objection
-Model.knex(knex);
+
+
 
 const app = express();
 
@@ -55,8 +55,17 @@ dbCheckConnection().then(() => {
   app.listen(process.env.SERVER_PORT || 3000, () => {
     // check for db connectivity if non exit process
     console.info(`Server has started at ${process.env.SERVER_PORT}`);
+    // config objection
+    Model.knex(knex);
   });
 })
+
+
+process.on('unhandledRejection', (err) => {
+
+  console.log(err);
+  process.exit(1);
+});
 
 
 
