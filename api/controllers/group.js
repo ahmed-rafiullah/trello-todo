@@ -1,7 +1,8 @@
 const express = require('express');
 const protectResource = require('./auth')
 const {
-    groupValidator
+    groupValidator,
+    groupSearchQueryValidator
 } = require('../validators/groupValidators')
 const Group = require('../models/groups')
 const idValidator = require('../validators/idValidator')
@@ -13,10 +14,36 @@ const router = express.Router();
 router.get('/', protectResource, async (req, res) => {
 
     try {
+        const query = await groupSearchQueryValidator.validateAsync(req.query)
         const userID = req.body._jwt_.xid
-        const userGroups = await Group.query().select().where({
+
+        // pagination
+        let page = query.page || 1
+        let count = query.count || 10
+        let offset = (page - 1) * count
+
+
+        let userGroupQueryBuilder = Group.query().select().where({
             user_id: userID
-        }).limit(5)
+        })
+
+
+        if ('sort' in query && 'sort_on' in query) {
+            userGroupQueryBuilder = userGroupQueryBuilder
+                .orderBy(query.sort_on, query.sort)
+        } else {
+            // default sorting is based on title and asc
+            userGroupQueryBuilder = userGroupQueryBuilder
+                .orderBy('group_name', 'asc')
+        }
+
+
+        userGroupQueryBuilder = userGroupQueryBuilder.limit(count).offset(offset)
+
+        userGroups = await userGroupQueryBuilder
+
+
+
 
         res.status(200).json({
             status: 'success',
