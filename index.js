@@ -1,9 +1,9 @@
 require('dotenv').config();
 const morgan = require('morgan');
 const express = require('express');
-const userRoute = require('./api-v1/controllers/user');
-const groupRoute = require('./api-v1/controllers/group');
-const todoRoute = require('./api-v1/controllers/todo');
+const userRoute = require('./api/controllers/user');
+const groupRoute = require('./api/controllers/group');
+const todoRoute = require('./api/controllers/todo');
 const helmet = require('helmet');
 const cors = require('cors')
 const {
@@ -18,6 +18,8 @@ const {
 
 
 
+
+
 const app = express();
 
 app.use(cors())
@@ -27,10 +29,9 @@ app.use(express.urlencoded({
 app.use(express.json());
 app.use(morgan('combined'));
 app.use(helmet());
-app.use('/api/v1/users', userRoute);
-app.use('/api/v1/groups', groupRoute);
-app.use('/api/v1/todos', todoRoute);
-app.use(express.static('public'));
+app.use('/api/users', userRoute);
+app.use('/api/groups', groupRoute);
+app.use('/api/todos', todoRoute);
 
 // 404
 app.use((req, res) => {
@@ -52,7 +53,7 @@ app.use((err, req, res, next) => {
 // if database is connected then run server
 dbCheckConnection().then(() => {
   console.log('database connected')
-  app.listen(process.env.SERVER_PORT || 3000, () => {
+  app.listen(process.env.SERVER_PORT, () => {
     // check for db connectivity if non exit process
     console.info(`Server has started at ${process.env.SERVER_PORT}`);
     // config objection
@@ -101,9 +102,9 @@ Add validation middleware
 Add Linter - DONE
 Add formatter - DONE
 Add precommit or pre push hooks to ensure formatting and linting 
-Add Authentication - using all kinds of methods and sheeet - Start with express session
+Add Authentication - using all kinds of methods and sheeet - Start with jwt cuz das easiest !
 Restructor App
-Learn sequelize
+
 Learn more sql
 Perform migrations
 Learn nodejs

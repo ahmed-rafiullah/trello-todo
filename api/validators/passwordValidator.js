@@ -1,17 +1,16 @@
-const Joi = require('joi');
 const passwordValidator = require('password-validator')
 
 const customPasswordValidator = (value, helpers) => {
     const passwordSchema = new passwordValidator();
     passwordSchema
         .is().min(8) // Minimum length 8
-        .is().max(50) // Maximum length 100
+        .is().max(50) // Maximum length 50
         .has().uppercase() // Must have uppercase letters
         .has().lowercase() // Must have lowercase letters
         .has().digits()
         .has().symbols() // Must have digits
-        .has().not().spaces() // Should not have spaces
-        .is().not().oneOf(['Passw0rd', 'Password123']);
+        .has().not().spaces(); // Should not have spaces
+
 
     const result = passwordSchema.validate(value, {
         list: true
@@ -28,14 +27,4 @@ const customPasswordValidator = (value, helpers) => {
 
 }
 
-
-
-const userValidator = Joi.object().keys({
-    fname: Joi.string().min(1).max(50).required(),
-    lname: Joi.string().min(1).max(50).required(),
-    email: Joi.string().email().min(1).max(50).required(),
-    password: Joi.string().min(1).max(50).custom(customPasswordValidator, 'customPasswordValidator').required(),
-})
-
-
-module.exports = userValidator
+module.exports = customPasswordValidator;

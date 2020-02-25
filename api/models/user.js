@@ -1,8 +1,12 @@
+// const {
+//     BaseModel
+// } = require('../helpers/BaseModel');
 const {
     Model
-} = require('objection');
-
+} = require('objection')
 const Todo = require('./todo')
+const Groups = require('./groups')
+
 
 class User extends Model {
     // Table name is the only required property.
@@ -11,7 +15,7 @@ class User extends Model {
     }
 
     static get idColumn() {
-        return 'id';
+        return 'user_id';
     }
 
     // "$schema": "http://json-schema.org/schema#"
@@ -38,8 +42,8 @@ class User extends Model {
                 },
                 password: {
                     type: 'string',
-                    minLength: 1,
-                    maxLength: 50
+                    minLength: 8,
+                    maxLength: 100
                 }
             }
         }
@@ -53,6 +57,15 @@ class User extends Model {
                 modelClass: Todo,
                 join: {
                     from: 'todos.user_id',
+                    to: 'users.user_id'
+                }
+            },
+
+            groups: {
+                relation: Model.HasManyRelation,
+                modelClass: Groups,
+                join: {
+                    from: 'groups.user_id',
                     to: 'users.user_id'
                 }
             }

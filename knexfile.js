@@ -10,14 +10,15 @@ module.exports = {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME
+      database: process.env.DB_NAME,
+      debug: true
 
     },
     migrations: {
-      directory: path.normalize(path.join(__dirname, '/api-v1/db/migrations'))
+      directory: path.normalize(path.join(__dirname, '/api/db/migrations'))
     },
     seeds: {
-      directory: path.normalize(__dirname + '/api-v1/db/seeds')
+      directory: path.normalize(__dirname + '/api/db/seeds')
     }
 
   },

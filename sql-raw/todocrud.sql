@@ -75,6 +75,18 @@ where todo_id = 2;
 delete from todos where todo_id = 2;
 
 
+-- pagination !
+SET @count = 5;
+SET @pagez = 2;
+SET @offsetz = (@pagez - 1) * @count;
+
+select @offsetz; 
+
+ select * from todos limit 5 , 5;
+ 
+ select * from todos;
+
+
 
 
 
