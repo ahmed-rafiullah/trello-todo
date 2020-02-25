@@ -16,6 +16,7 @@ const {
 
 
 
+
 // create a todo belonging to current user
 router.post('/', protectResource, async (req, res) => {
     try {
@@ -30,15 +31,75 @@ router.post('/', protectResource, async (req, res) => {
             user_id: userID
         }
 
-        const result = await Todo.query().insert(todo)
+        console.log(todo)
 
-        console.log(result)
+        // do select inset if group id is present in todo
+        if ('group_id' in todo) {
+            // create model instance to be able to call $validate manually
+            const todoInstance = new Todo()
 
-        res.status(201).json({
-            status: 'success',
-            message: 'created todo',
-            todo: result
-        })
+            // validate manually 
+            const schemaValidatedTodo = todoInstance.$validate(todo)
+            const knex = todoInstance.$knex()
+
+            // check if user has any groups 
+            const subquery = await Groups.query().select().distinct('group_id').where('user_id', userID)
+            // map subquery to array
+            subqueryArray = subquery.map(x => x.group_id)
+            const doesGroupExistInSubquery = subqueryArray.find(e => e === todo.group_id)
+            // if no group exists then return with no group exists response other wise continue
+            // if user groups exist does the groupid exist in that array ?
+            if (subquery.length === 0 || typeof doesGroupExistInSubquery === 'undefined') {
+                return res.status(404).json({
+                    status: 'failed',
+                    message: `group resource with id ${todo.group_id} does not exist`,
+                })
+            }
+
+
+            // construct select insert query
+            // select insert is a bit fucky 
+            // https://runkit.com/embed/jzi2sqpb8pu6
+            // https://github.com/knex/knex/commit/e74f43cfe57ab27b02250948f8706d16c5d821b8#diff-cb48f4af7c014ca6a7a2008c9d280573R608
+
+
+            const selectWhereInQuery = knex
+                .select(
+                    knex.raw(`${schemaValidatedTodo.user_id}`),
+                    knex.raw(`"${schemaValidatedTodo.title}"`),
+                    knex.raw(`"${schemaValidatedTodo.description}"`),
+                    knex.raw(`${schemaValidatedTodo.completed ? 1 : 0}`),
+                    knex.raw(`${schemaValidatedTodo.group_id}`))
+                .whereIn(schemaValidatedTodo.group_id,
+                    subqueryArray
+                ).toSQL()
+
+            const result = await knex
+                .table(Todo.tableName)
+                .insert(knex.raw('(user_id,title, description,completed,group_id) ' + selectWhereInQuery.sql, selectWhereInQuery.bindings));
+
+
+
+
+
+            console.log(result)
+
+            res.status(201).json({
+                status: 'success',
+                message: 'created todo',
+                todo: schemaValidatedTodo
+            })
+
+
+        } else {
+            const result = await Todo.query().insert(todo)
+            res.status(201).json({
+                status: 'success',
+                message: 'created todo',
+                todo: result
+            })
+
+        }
 
     } catch (err) {
         console.log(err)
@@ -56,9 +117,10 @@ router.post('/', protectResource, async (req, res) => {
 router.get('/', protectResource, async (req, res) => {
     try {
 
+        const userID = req.body._jwt_.xid
         const query = await todoSearchQueryValidator.validateAsync(req.query)
 
-        let todoQueryBuilder = Todo.query().select()
+        let todoQueryBuilder = Todo.query().select().where('user_id', userID)
         // build search query
         if ('title' in query) {
             todoQueryBuilder = todoQueryBuilder

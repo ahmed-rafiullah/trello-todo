@@ -43,8 +43,6 @@ router.get('/', protectResource, async (req, res) => {
         userGroups = await userGroupQueryBuilder
 
 
-
-
         res.status(200).json({
             status: 'success',
             user_groups: userGroups
