@@ -6,6 +6,8 @@ const groupRoute = require('./api/controllers/group');
 const todoRoute = require('./api/controllers/todo');
 const helmet = require('helmet');
 const cors = require('cors')
+
+
 const {
   knex,
   dbCheckConnection
@@ -15,6 +17,15 @@ const {
   Model
 } = require('objection');
 
+const swaggerUi = require('swagger-ui-express');
+const {
+  swaggerSpec
+} = require('./swagger')
+
+
+const options = {
+  explorer: true
+};
 
 
 
@@ -22,6 +33,7 @@ const {
 
 const app = express();
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, options));
 app.use(cors())
 app.use(express.urlencoded({
   extended: false
@@ -95,7 +107,7 @@ CRUD on todo statuses
 */
 
 /*
-TODO:
+
 
 Understand sql more and learn sequelize fcking
 Add validation middleware

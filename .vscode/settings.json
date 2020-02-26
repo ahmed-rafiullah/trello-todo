@@ -1,5 +1,16 @@
 {
     "editor.formatOnSave": true,
     "javascript.validate.enable": true,
-    "cSpell.diagnosticLevel": "Hint"
+    "cSpell.diagnosticLevel": "Hint",
+    "yaml.schemas": {
+        "openapi-v3-schema.json": ["api/swagger-yaml/*.yaml"]
+    },
+    "yaml.completion": true,
+    "yaml.format.enable": true,
+    "yaml.trace.server": "verbose",
+    "yaml.hover": true,
+    "yaml.validate": true,
+    "sync.autoUpload": true
+
+
 }

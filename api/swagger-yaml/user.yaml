@@ -1,0 +1,145 @@
+openapi: 3.0.1
+info:
+  title: title
+  version: "1"
+
+paths:
+  /users/register:
+    summary: Registers a new user
+    description: >
+      Registers a new user
+
+    post:
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+              example:
+                status: success
+                result: user registered successfully
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "400":
+          description: email is already taken
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+              example:
+                status: failed
+                reason: email is already taken
+
+  /users/login:
+    summary: logs in a user
+    description: >
+      logs in a new user and sends back a jwt
+    post:
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginUser"
+            example:
+              email: user@email.com
+              password: passwordA_1
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+              example:
+                status: success
+                reason: login successful
+                access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+              example:
+                status: failed
+                reason: email or password is incorrect
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /users/change-password:
+    summary: changes a user password
+    description: >
+      changes a users password
+    post:
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordChange"
+            example:
+              old_password: HelloWorld_1
+              new_password: HelloWorld_2
+              new_password_again: HelloWorld_2
+
+      tags:
+        - User
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+              example:
+                status: success
+                result: password changed
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+        "404":
+          description: User does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+              example:
+                status: failed
+                reason: user no longer exists
+
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+              examples:
+                incorrect_password:
+                  value:
+                    status: failed
+                    reason: incorrect password
+                new_passwords_must_match:
+                  value:
+                    status: failed
+                    reason: new passwords must match
+                new_password_must_not_match_old_password:
+                  value:
+                    status: failed
+                    reason: new password cannot be same as old password
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"

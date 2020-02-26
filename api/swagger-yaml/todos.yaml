@@ -1,0 +1,256 @@
+openapi: 3.0.1
+info:
+  title: title
+  version: "1"
+
+paths:
+  /todos:
+    summary: create and search todos
+    post:
+      security:
+        - bearerAuth: []
+
+      tags:
+        - Todo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Todo"
+            example:
+              title: Now this is pod racing
+              description: Do this thing that i need to complete
+              group_id: 8
+              completed: false
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateTodoSuccessResponse"
+              example:
+                status: success
+                result: created todo
+                todo:
+                  title: Now this is pod racing
+                  description: Do this thing that i need to complete
+                  group_id: 8
+                  completed: false
+        "404":
+          description: If group_id does not exist for current user you need to first create it
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+              example:
+                status: failed
+                result: group resource with id 9348 does not exist
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Todo
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 50
+          description: search titles
+        - in: query
+          name: description
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 50
+          description: search description
+        - in: query
+          name: completed
+          schema:
+            type: boolean
+          description: search completed todos
+        - in: query
+          name: group_id
+          schema:
+            type: string
+            minimum: 1
+          description: search todos in group with group_id
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+          description: sort todos **sort and sort_on are always specified together**
+        - in: query
+          name: sort_on
+          schema:
+            type: string
+            enum:
+              - title
+              - description
+              - completed
+              - group_id
+            default: title
+          description: property to sort on **sort and sort_on are always specified together**
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+          description: page number
+        - in: query
+          name: count
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+          description: number of todos to return
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodoSearchQueryResponse"
+              example:
+                status: success
+                todo:
+                  - title: Do this thing that i need to complete
+                    description: Now this is pod racing
+                    completed: false
+                    group_id: 7
+
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "400":
+          description: Bad Request or Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+  /todos/{id}:
+    get:
+      tags:
+        - Todo
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id # Note the name is the same as in the path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: todo id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodoSearchQueryResponse"
+              example:
+                status: success
+                todo:
+                  - title: Do this thing that i need to complete
+                    description: Now this is pod racing
+                    completed: false
+                    group_id: 7
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+        "404":
+          description: todo does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+              example:
+                status: failed
+                reason: todo with id {id} does not exist
+    delete:
+      tags:
+        - Todo
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: todo id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+              example:
+                status: success
+                result: deleted todo with id {id}
+        "404":
+          description: todo does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+              example:
+                status: failed
+                reason: todo resource with id {id} does not exist
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    put:
+      tags:
+        - Todo
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: todo id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TodoUpdateResult"
+                qa:
+                  type: string
+              example:
+                status: success
+                result: updated todo with id {id}
+
+        "404":
+          description: todo or group does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+              examples:
+                no-todo:
+                  value:
+                    status: failed
+                    reason: todo resource with id {id} does not exist
+                no-group:
+                  value:
+                    status: failed
+                    reason: group resource with id {id} does not exist
+        "500":
+          $ref: "#/components/responses/InternalServerError"

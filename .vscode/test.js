@@ -1,0 +1,1 @@
+x = require('../api/swagger-yaml/*.yaml')

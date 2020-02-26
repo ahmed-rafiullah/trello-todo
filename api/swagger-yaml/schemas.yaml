@@ -1,0 +1,229 @@
+openapi: 3.0.1
+info:
+  title: title
+  version: "1"
+
+tags:
+  - name: User
+    description: All user operations like register login and change password are here
+  - name: Todo
+    description: All todo CRUD operations are here
+  - name: Group
+    description: All group CRUD operations are here
+
+components:
+  # Schemas for response objects
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                type: string
+                default: failed
+                description: the fail response
+                example: failed
+              reason:
+                type: string
+                description: the reason of failure/s
+                default: Unauthorized
+                example: Unauthorized
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                type: string
+                default: failed
+                description: the fail response
+                example: failed
+              reason:
+                type: string
+                description: the reason of failure/s
+                default: Internal Server Error
+                example: Internal Server Error
+  # Schemas for request objects
+  schemas:
+    User:
+      type: object
+      required:
+        - fname
+        - lname
+        - email
+        - password
+      properties:
+        fname:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The first name of user must be between 1 and 50 characters
+        lname:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The last name of user must be between 1 and 50 characters
+        email:
+          type: string
+          minLength: 1
+          maxLength: 50
+          format: email
+          description: The email of user must be between 1 and 50 characters
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 50
+          description: >
+            The password of user must be between 8 and 50 characters and must
+            contain Capital letters, Lowercase letters, digits, symbols and must not have a space
+    Todo:
+      type: object
+      required:
+        - title
+        - description
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The title must be between 1 and 50 characters
+        description:
+          type: string
+          minLength: 1
+          maxLength: 250
+          description: The description must be between 1 and 50 characters
+        completeted:
+          type: boolean
+          default: false
+          description: If the todo is completeted or not default is false if you dont supply this value
+        group_id:
+          type: integer
+          description: groupid which must exist for current user
+    Group:
+      type: object
+      required:
+        - group_name
+      properties:
+        group_name:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: the group name must be between 1 and 50 characters
+    PasswordChange:
+      type: object
+      required:
+        - old_password
+        - new_password
+        - new_password_again
+      properties:
+        old_password:
+          type: string
+          description: the old i.e current password
+          minLength: 8
+          maxLength: 50
+        new_password:
+          type: string
+          description: the new password
+          minLength: 8
+          maxLength: 50
+        new_password_again:
+          type: string
+          minLength: 8
+          maxLength: 50
+          description: the new password again for verification
+    LoginUser:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          format: email
+          type: string
+          description: user email
+          minLength: 1
+          maxLength: 50
+        password:
+          type: string
+          format: password
+          description: the new password
+          minLength: 8
+          maxLength: 50
+    CreateTodoSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: success
+          default: success
+        result:
+          type: string
+          description: describes success
+          example: todo with id 56 created
+        todo:
+          $ref: "#/components/schemas/Todo"
+    TodoSearchQueryResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          default: success
+        todos:
+          type: array
+          items:
+            $ref: "#/components/schemas/Todo"
+    TodoUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          required:
+            - updated_fields
+          properties:
+            updated_fields:
+              $ref: "#/components/schemas/Todo"
+
+    FailureResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: the fail response
+          default: failed
+          example: failed
+        reason:
+          type: string
+          description: describes why the failure occurred
+          example: todo with id 56 does not exist
+    SuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: success
+          default: success
+        result:
+          type: string
+          description: describes success
+          example: todo with id 56 created
+    LoginResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          default: success
+        result:
+          type: string
+          default: login successful
+        access_token:
+          type: string
+          description: json web token
+  # security schema
+  securitySchemes:
+    bearerAuth: #jwt
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

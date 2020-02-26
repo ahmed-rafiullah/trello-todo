@@ -11,6 +11,8 @@ const jwt = require('jsonwebtoken')
 const protectResource = require('./auth')
 const saltRounds = 10
 
+
+
 // register a new user 
 router.post('/register', async (req, res) => {
   try {
@@ -19,7 +21,7 @@ router.post('/register', async (req, res) => {
     console.log(user)
     const emailExists = await User.query().select('email').where('email', user.email).limit(1)
     if (emailExists.length > 0) {
-      return res.status(200).json({
+      return res.status(400).json({
         status: 'fail',
         reason: 'email is already taken'
       })
@@ -28,15 +30,15 @@ router.post('/register', async (req, res) => {
       await User.query().insert(user)
       res.status(201).json({
         status: 'success',
-        message: 'user registered successfully'
+        result: 'user registered successfully'
       })
     }
 
   } catch (err) {
     console.log(err)
-    res.status(422).json({
+    res.status(500).json({
       status: 'failed',
-      reason: err.message
+      reason: 'Internal Server Error'
     })
   }
 
@@ -54,9 +56,9 @@ router.post('/login', async (req, res) => {
 
     // no user or email
     if (doesUserExist.length === 0) {
-      return res.status(200).json({
+      return res.status(401).json({
         status: 'fail',
-        reason: 'user name or password is incorrect'
+        reason: 'email or password is incorrect'
       })
     }
 
@@ -64,9 +66,9 @@ router.post('/login', async (req, res) => {
     const passwordCheck = await bcrypt.compare(user.password, doesUserExist[0].password)
 
     if (passwordCheck === false) {
-      return res.status(200).json({
+      return res.status(401).json({
         status: 'fail',
-        reason: 'user name or password is incorrect'
+        reason: 'email or password is incorrect'
       })
     }
 
@@ -88,9 +90,9 @@ router.post('/login', async (req, res) => {
     })
   } catch (err) {
     console.log(err)
-    res.status(422).json({
+    res.status(500).json({
       status: 'failed',
-      reason: err.message
+      reason: 'Internal Server Error'
     })
   }
 
@@ -112,7 +114,7 @@ router.post('/change-password', protectResource, async (req, res) => {
     const user = (await User.query().select('user_id', 'password').where('user_id', userID).limit(1))[0]
     // no user exists exit
     if (typeof user === 'undefined') {
-      return res.status(400).json({
+      return res.status(404).json({
         status: 'failed',
         reason: 'user no longer exists'
       })
@@ -139,7 +141,7 @@ router.post('/change-password', protectResource, async (req, res) => {
     // check if old password and new passwords match 
     if (reset_password.old_password === reset_password.new_password ||
       reset_password.old_password === reset_password.new_password_again) {
-      return res.status(401).json({
+      return res.status(400).json({
         status: 'failed',
         reason: 'new password cannot be same as old password'
       })
@@ -166,14 +168,14 @@ router.post('/change-password', protectResource, async (req, res) => {
       // other wise something went wrong
       res.status(500).json({
         status: 'failed',
-        result: 'Internal server error'
+        reason: 'Internal server error'
       })
     }
   } catch (err) {
     console.log(err)
     res.status(500).json({
       status: 'failed',
-      result: 'Internal server error'
+      reason: 'Internal server error'
     })
   }
 });

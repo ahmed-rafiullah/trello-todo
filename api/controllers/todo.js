@@ -14,9 +14,6 @@ const {
 } = require('@hapi/joi')
 
 
-
-
-
 // create a todo belonging to current user
 router.post('/', protectResource, async (req, res) => {
     try {
@@ -138,8 +135,6 @@ router.get('/', protectResource, async (req, res) => {
         }
 
         if ('group_id' in query) {
-            // check if group already exists or not
-
             todoQueryBuilder = todoQueryBuilder
                 .where('group_id', query.group_id)
         }
@@ -160,18 +155,6 @@ router.get('/', protectResource, async (req, res) => {
 
         todoQueryBuilder = todoQueryBuilder.limit(count).offset(offset)
 
-
-        // TODO: Show total pages left, current page, and total todos
-        // //get total number of todos
-        // const todoCount = await Todo.query().select().count('todo_id').as('total_todos').from('todos')
-
-        // console.log(todoCount)
-
-        // // based on current count get total number of pages
-
-
-
-
         const result = await todoQueryBuilder
 
         console.log(result)
@@ -179,7 +162,7 @@ router.get('/', protectResource, async (req, res) => {
 
         res.status(200).json({
             status: 'success',
-            results: result
+            todos: result
         })
 
 
@@ -189,7 +172,7 @@ router.get('/', protectResource, async (req, res) => {
             console.log(err)
             return res.status(400).json({
                 status: 'failed',
-                error: err.message
+                reason: err.message
             })
         }
         console.log(err)
@@ -213,6 +196,7 @@ router.get('/:id', protectResource, async (req, res) => {
             todo_id
         }).limit(1)
 
+        //TODO: Add todo does not exist and return 404 error code
         res.status(200).json({
             status: 'success',
             todos
