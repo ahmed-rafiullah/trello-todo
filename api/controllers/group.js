@@ -45,7 +45,8 @@ router.get('/', protectResource, async (req, res) => {
 
         res.status(200).json({
             status: 'success',
-            user_groups: userGroups
+            result: 'user groups',
+            groups: userGroups
         })
     } catch (err) {
         console.log(err)

@@ -227,13 +227,13 @@ router.delete('/:id', protectResource, async (req, res) => {
         if (todos === 1) {
             res.status(200).json({
                 status: 'success',
-                message: `delete todo with id ${todo_id}`,
+                result: `delete todo with id ${todo_id}`,
             })
 
         } else {
             res.status(404).json({
                 status: 'failed',
-                message: `todo resource with id ${todo_id} does not exist`,
+                reason: `todo resource with id ${todo_id} does not exist`,
             })
         }
 
@@ -242,7 +242,7 @@ router.delete('/:id', protectResource, async (req, res) => {
         console.log(err)
         res.status(500).json({
             status: 'failed',
-            error: 'Internal Server Error'
+            reason: 'Internal Server Error'
         })
     }
 

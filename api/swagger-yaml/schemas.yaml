@@ -186,6 +186,45 @@ components:
             updated_fields:
               $ref: "#/components/schemas/Todo"
 
+    GroupSearchQueryResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            groups:
+              type: array
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/Group"
+                  - type: object
+                    properties:
+                      date_created:
+                        type: string
+                        format: date-time
+                      group_id:
+                        type: integer
+                        minimum: 1
+                        description: the group_id
+                      user_id:
+                        type: integer
+                        minimum: 1
+                        description: the user_id
+    GroupUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          required:
+            - updated_fields
+          properties:
+            updated_fields:
+              $ref: "#/components/schemas/Group"
+    CreateGroupSuccessResponse:
+      allOf:
+        - $ref: "#/components/schemas/SuccessResponse"
+        - type: object
+          properties:
+            group:
+              $ref: "#/components/schemas/Group"
     FailureResponse:
       type: object
       properties:

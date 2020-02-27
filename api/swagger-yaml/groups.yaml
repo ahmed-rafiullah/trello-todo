@@ -1,0 +1,186 @@
+openapi: 3.0.1
+info:
+  title: title
+  version: "1"
+
+paths:
+  /groups:
+    summary: Add and search groups
+
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Group
+      description: get user groups
+      parameters:
+        - in: query
+          name: group_name
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 50
+          description: the group name
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: the page
+        - in: query
+          name: count
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          description: the number of groups to return
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          description: how to sort
+        - in: query
+          name: sort_on
+          schema:
+            type: string
+            enum:
+              - group_name
+          description: what to sort on
+      responses:
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupSearchQueryResponse"
+              example:
+                status: success
+                result: user groups
+                groups:
+                  - group_id: 8
+                    group_name: done
+                    date_created: 2020-02-25T13:17:47.000Z
+                    user_id: 16
+        "400":
+          description: Bad Request or Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+    post:
+      description: create new group
+      tags:
+        - Group
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Group"
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateGroupSuccessResponse"
+              example:
+                status: success
+                message: created group
+                group:
+                  group_name: todoing stuff
+        "400":
+          description: Bad Request or Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /groups/{id}:
+    summary: get update or delete groups
+    delete:
+      description: delete group with group_id
+      tags:
+        - Group
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: todo id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+              example:
+                status: success
+                result: deleted group resource with id {id}
+        "404":
+          description: group does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+              example:
+                status: failed
+                reason: group resource with id {id} does not exist
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    put:
+      description: update group with group_id
+      tags:
+        - Group
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: todo id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupUpdateResult"
+                qa:
+                  type: string
+              example:
+                status: success
+                result: updated todo with id {id}
+                update_fields:
+                  group_name: now thats pod racing
+
+        "404":
+          description: group resource with id ${groupID} does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailureResponse"
+              example:
+                status: failed
+                reason: group resource with id {id} does not exist
+
+        "500":
+          $ref: "#/components/responses/InternalServerError"
