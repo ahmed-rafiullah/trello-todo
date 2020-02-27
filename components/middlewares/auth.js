@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const {
     jwtValidator
-} = require('../validators/jwtValidator')
+} = require('../../api/validators/jwtValidator')
 const checkAuth = async (req, res, next) => {
 
 

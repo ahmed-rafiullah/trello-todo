@@ -5,7 +5,7 @@
 const {
     Model
 } = require('objection')
-const Todo = require('./todo')
+const Todo = require('../todo/todoModel')
 
 class Group extends Model {
     // Table name is the only required property.

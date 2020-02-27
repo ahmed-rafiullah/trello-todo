@@ -1,13 +1,13 @@
 const express = require('express');
-const Todo = require('../models/todo')
+const Todo = require('./todoModel')
 const Groups = require('../models/groups')
 const {
     todoValidator,
     todoUpdateValidator,
     todoSearchQueryValidator
-} = require('../validators/todoValidators')
-const idValidator = require('../validators/idValidator')
-const protectResource = require('./auth')
+} = require('./todoValidators')
+const idValidator = require('../../api/validators/idValidator')
+const protectResource = require('../../api/controllers/auth')
 const router = express.Router();
 const {
     ValidationError

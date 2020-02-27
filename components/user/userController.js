@@ -1,14 +1,14 @@
 const express = require('express');
-const User = require('../models/user')
+const User = require('./userModel')
 const {
   userRegisterValidator,
   userLoginValidator,
   userPasswordChangeValidator
-} = require('../validators/userValidators')
+} = require('./userValidators')
 const router = express.Router();
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const protectResource = require('./auth')
+const protectResource = require('../../api/controllers/auth')
 const saltRounds = 10
 
 

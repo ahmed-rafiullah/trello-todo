@@ -4,8 +4,8 @@
 const {
     Model
 } = require('objection')
-const Todo = require('./todo')
-const Groups = require('./groups')
+const Todo = require('../todo/todoModel')
+const Groups = require('../group/groupModel')
 
 
 class User extends Model {
