@@ -1,11 +1,11 @@
 const express = require('express');
-const protectResource = require('../common/auth')
+const protectResource = require('../middlewares/auth')
 const {
     groupValidator,
     groupSearchQueryValidator
 } = require('./groupValidators')
 const Group = require('./groupModel')
-const idValidator = require('../../api/validators/idValidator')
+const idValidator = require('../utilities/idValidator')
 const router = express.Router();
 
 

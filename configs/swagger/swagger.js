@@ -1,5 +1,4 @@
 const swaggerJSDoc = require('swagger-jsdoc')
-
 const options = {
     swaggerDefinition: {
         openapi: "3.0.3",
@@ -18,13 +17,15 @@ const options = {
         }]
     },
     // Path to the API docs
-    apis: ['./api/swagger-yaml/**/*.yaml'],
+    // paths are relative to current directory from which you execute the current program !
+    apis: ["./swagger-schemas/**/*.yaml"],
 };
 
+// require('../../swagger-schemas/*.yaml')
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format
 const swaggerSpec = swaggerJSDoc(options);
 
-
+// require('../../swagger-schemas')
 module.exports = {
     swaggerSpec
 }

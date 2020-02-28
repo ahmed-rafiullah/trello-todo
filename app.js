@@ -1,17 +1,18 @@
 require('dotenv').config();
 const morgan = require('morgan');
 const express = require('express');
-const userRoute = require('./api/controllers/user');
-const groupRoute = require('./api/controllers/group');
-const todoRoute = require('./api/controllers/todo');
+const userRoute = require('./components/user/userController');
+const groupRoute = require('./components/group/groupController');
+const todoRoute = require('./components/todo/todoController');
 const helmet = require('helmet');
 const cors = require('cors')
+const config = require('./configs/env/config')
 
 
 const {
   knex,
   dbCheckConnection
-} = require('./db')
+} = require('./configs/db/db')
 
 const {
   Model
@@ -20,7 +21,7 @@ const {
 const swaggerUi = require('swagger-ui-express');
 const {
   swaggerSpec
-} = require('./swagger')
+} = require('./configs/swagger/swagger')
 
 
 const options = {
@@ -65,9 +66,9 @@ app.use((err, req, res, next) => {
 // if database is connected then run server
 dbCheckConnection().then(() => {
   console.log('database connected')
-  app.listen(process.env.SERVER_PORT, () => {
+  app.listen(config.server.SERVER_PORT, () => {
     // check for db connectivity if non exit process
-    console.info(`Server has started at ${process.env.SERVER_PORT}`);
+    console.info(`Server has started at ${config.server.SERVER_PORT}`);
     // config objection
     Model.knex(knex);
   });

@@ -8,7 +8,8 @@ const {
 const router = express.Router();
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const protectResource = require('../../api/controllers/auth')
+const protectResource = require('../middlewares/auth')
+const config = require('../../configs/env/config')
 const saltRounds = 10
 
 
@@ -77,7 +78,7 @@ router.post('/login', async (req, res) => {
       xid: doesUserExist[0].user_id,
       name: `${doesUserExist[0].fname} ${doesUserExist[0].lname}`,
       email: doesUserExist[0].email
-    }, process.env.JWT_SECRET, {
+    }, config.security.JWT_SECRET, {
       expiresIn: '1h'
     })
 

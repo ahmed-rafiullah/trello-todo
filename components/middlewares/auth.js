@@ -1,14 +1,15 @@
 const jwt = require('jsonwebtoken')
 const {
     jwtValidator
-} = require('../../api/validators/jwtValidator')
+} = require('../utilities/jwtValidator')
+const config = require('../../configs/env/config')
 const checkAuth = async (req, res, next) => {
 
 
     try {
         const authorizationHeader = req.header('Authorization')
         const token = authorizationHeader.split(' ')[1]
-        const isValid = jwt.verify(token, process.env.JWT_SECRET)
+        const isValid = jwt.verify(token, config.security.JWT_SECRET)
         if (isValid === false) {
             return res.status(401).json({
                 status: 'failed',

@@ -8,6 +8,8 @@
 const Joi = require('@hapi/joi')
 const result = require('dotenv').config()
 
+
+
 if (result.error) {
     throw result.error
 }
@@ -32,7 +34,7 @@ if (result.error) {
 
 const envSchema = Joi.object().keys({
     SERVER_PORT: Joi.number().integer().greater(0).required(),
-    DB_HOST: Joi.string().uri().required(),
+    DB_HOST: Joi.string().required(),
     DB_PORT: Joi.number().integer().greater(0).required(),
     DB_NAME: Joi.string().required(),
     DB_USER: Joi.string().required(),
@@ -46,7 +48,7 @@ const envSchema = Joi.object().keys({
 const {
     error,
     value: validEnv
-} = envSchema.validate(result)
+} = envSchema.validate(result.parsed)
 
 if (error) {
     throw new Error(`Config validation error: ${error.message}`)
