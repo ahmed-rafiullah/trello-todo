@@ -1,4 +1,23 @@
-require('dotenv').config();
+// any error here is determined to cause an in
+
+process.addListener('unhandledRejection', (err) => {
+  // log the error
+  // fatal
+  console.log('111111')
+  process.exit(1)
+})
+
+
+
+process.addListener('uncaughtException', (err) => {
+  // log the error
+  // fatal
+  console.log(2222222)
+  process.exit(1)
+})
+
+
+
 const morgan = require('morgan');
 const express = require('express');
 const userRoute = require('./components/user/userController');
@@ -6,7 +25,7 @@ const groupRoute = require('./components/group/groupController');
 const todoRoute = require('./components/todo/todoController');
 const helmet = require('helmet');
 const cors = require('cors')
-const config = require('./configs/env/config')
+const errorHandler = require('./components/utilities/globalErrorHandler')
 
 
 const {
@@ -14,9 +33,12 @@ const {
   dbCheckConnection
 } = require('./configs/db/db')
 
+const config = require('./configs/env/config')
+
 const {
   Model
 } = require('objection');
+
 
 const swaggerUi = require('swagger-ui-express');
 const {
@@ -27,9 +49,6 @@ const {
 const options = {
   explorer: true
 };
-
-
-
 
 
 const app = express();
@@ -55,31 +74,43 @@ app.use((req, res) => {
 });
 
 // All other errors are handled here
-app.use((err, req, res, next) => {
+app.use(async (err, req, res, next) => {
   // HTTP status 404: NotFound
-  console.log(err.stack);
-  res.status(500).json({
-    error: 'Internal Server Error'
+  // use centralized error handler here
+  const errorResult = await errorHandler(err)
+
+
+  // exit app if fatal
+  if (errorResult.fatal === true) {
+    console.log('fatal error')
+    process.exit(1)
+  }
+
+  // other wise 
+  res.status(errorResult.reponseCode).json({
+    ...errorResult.payload
   });
 });
+
+
+
+
 
 // if database is connected then run server
 dbCheckConnection().then(() => {
   console.log('database connected')
+  Model.knex(knex);
   app.listen(config.server.SERVER_PORT, () => {
     // check for db connectivity if non exit process
     console.info(`Server has started at ${config.server.SERVER_PORT}`);
     // config objection
-    Model.knex(knex);
+
   });
 })
 
 
-process.on('unhandledRejection', (err) => {
 
-  console.log(err);
-  process.exit(1);
-});
+
 
 
 

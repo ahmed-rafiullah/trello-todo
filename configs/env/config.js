@@ -7,6 +7,7 @@
 
 const Joi = require('@hapi/joi')
 const result = require('dotenv').config()
+const AppError = require('../../components/utilities/appError')
 
 
 
@@ -27,7 +28,7 @@ if (result.error) {
     'JWT_SECRET'
 ].forEach(name => {
     if (!process.env[name]) {
-        throw new Error(`Environment variable ${name} is missing`)
+        throw new AppError(`Environment variable ${name} is missing`, 500, true)
     }
 })
 
@@ -51,7 +52,8 @@ const {
 } = envSchema.validate(result.parsed)
 
 if (error) {
-    throw new Error(`Config validation error: ${error.message}`)
+    throw new AppError(`Config validation error: ${error.message}`, 500, true)
+
 }
 
 const config = {

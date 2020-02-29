@@ -1,5 +1,5 @@
 const express = require('express');
-const User = require('./userModel')
+const UserModel = require('./userModel')
 const {
   userRegisterValidator,
   userLoginValidator,
@@ -12,35 +12,59 @@ const protectResource = require('../middlewares/auth')
 const config = require('../../configs/env/config')
 const saltRounds = 10
 
+const UserService = require('./userService')
 
 
 // register a new user 
-router.post('/register', async (req, res) => {
+// router.post('/register', async (req, res) => {
+//   try {
+//     let user = await userRegisterValidator.validateAsync(req.body)
+//     const password = await bcrypt.hash(user.password, saltRounds)
+//     console.log(user)
+//     const emailExists = await User.query().select('email').where('email', user.email).limit(1)
+//     if (emailExists.length > 0) {
+//       return res.status(400).json({
+//         status: 'fail',
+//         reason: 'email is already taken'
+//       })
+//     } else {
+//       user.password = password
+//       await User.query().insert(user)
+//       res.status(201).json({
+//         status: 'success',
+//         result: 'user registered successfully'
+//       })
+//     }
+
+//   } catch (err) {
+//     console.log(err)
+//     res.status(500).json({
+//       status: 'failed',
+//       reason: 'Internal Server Error'
+//     })
+//   }
+
+// });
+
+
+
+router.post('/register', async (req, res, next) => {
   try {
     let user = await userRegisterValidator.validateAsync(req.body)
-    const password = await bcrypt.hash(user.password, saltRounds)
-    console.log(user)
-    const emailExists = await User.query().select('email').where('email', user.email).limit(1)
-    if (emailExists.length > 0) {
-      return res.status(400).json({
-        status: 'fail',
-        reason: 'email is already taken'
-      })
-    } else {
-      user.password = password
-      await User.query().insert(user)
-      res.status(201).json({
-        status: 'success',
-        result: 'user registered successfully'
-      })
-    }
+
+    // do buisness logic
+    const userService = new UserService(UserModel)
+    const result = await userService.registerUser(user)
+
+    // send success response job of express
+    res.status(200).json({
+      status: 'success',
+      result: "registered user successfully",
+      user: result
+    })
 
   } catch (err) {
-    console.log(err)
-    res.status(500).json({
-      status: 'failed',
-      reason: 'Internal Server Error'
-    })
+    next(err)
   }
 
 });
