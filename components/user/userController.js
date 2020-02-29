@@ -59,7 +59,7 @@ router.post('/register', async (req, res, next) => {
     // send success response job of express
     res.status(200).json({
       status: 'success',
-      result: "registered user successfully",
+      result: "registered user successfullysss",
       user: result
     })
 

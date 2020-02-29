@@ -40,13 +40,14 @@ This app follows as close as possible node best practices https://github.com/gol
     * [x] Layer your components, keep Express within its boundaries
     * [ ] Wrap common utilities as npm packages
     * [ ] Separate Express 'app' and 'server'
-    * [ ] Use environment aware, secure and hierarchical config
+    * [x] Use environment aware, secure and hierarchical config
 * Error Handling Practices
  * [x] Use Async-Await or promises for async error handling
  * [x] Use only the built-in Error object
- * [ ] Distinguish operational vs programmer errors
- * [ ] Handle errors centrally, not within an Express middleware
+ * [x] Distinguish operational vs programmer errors
+ * [x] Handle errors centrally, not within an Express middleware
  * [x] Document API errors using Swagger or GraphQL
+ * [ ] Exit the process gracefully when a stranger comes to town
 #### Tech stack
 
 Uses Git flow for managing features.
