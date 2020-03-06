@@ -1,23 +1,3 @@
-// any error here is determined to cause an in
-
-process.addListener('unhandledRejection', (err) => {
-  // log the error
-  // fatal
-  console.log('111111')
-  process.exit(1)
-})
-
-
-
-process.addListener('uncaughtException', (err) => {
-  // log the error
-  // fatal
-  console.log(2222222)
-  process.exit(1)
-})
-
-
-
 const morgan = require('morgan');
 const express = require('express');
 const userRoute = require('./components/user/userController');
@@ -109,10 +89,29 @@ dbCheckConnection().then(() => {
 })
 
 
+// FIXME: There is a bug in pm2 run ap.js using no daemon
+// and ctrcl-c. Run it again and then call npx pm2 stop ll
+
+
+// any error here is determined to cause an in
+
+process.addListener('unhandledRejection', (err) => {
+  // log the error
+  // fatal
+  console.log(err)
+  console.log('111111')
+  process.exit(1)
+})
 
 
 
-
+process.addListener('uncaughtException', (err) => {
+  // log the error
+  // fatal
+  console.log(err)
+  console.log(2222222)
+  process.exit(1)
+})
 
 
 
