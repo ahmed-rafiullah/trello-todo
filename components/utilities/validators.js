@@ -3,6 +3,8 @@ const Joi = require('@hapi/joi');
 
 
 
+
+
 const jwtValidator = Joi.object().keys({
     xid: Joi.number().integer().required(),
     name: Joi.string().required(),
@@ -13,7 +15,11 @@ const jwtValidator = Joi.object().keys({
 
 
 
+const idValidator = Joi.number().integer().greater(0).positive().required()
+
+
 
 module.exports = {
-    jwtValidator
+    jwtValidator,
+    idValidator
 }

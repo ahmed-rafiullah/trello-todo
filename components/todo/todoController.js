@@ -6,7 +6,9 @@ const {
     todoUpdateValidator,
     todoSearchQueryValidator
 } = require('./todoValidators')
-const idValidator = require('../utilities/idValidator')
+const {
+    idValidator
+} = require('../utilities/validators')
 const protectResource = require('../middlewares/auth')
 const router = express.Router();
 const {

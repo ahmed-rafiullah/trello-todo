@@ -5,7 +5,9 @@ const {
     groupSearchQueryValidator
 } = require('./groupValidators')
 const Group = require('./groupModel')
-const idValidator = require('../utilities/idValidator')
+const {
+    idValidator
+} = require('../utilities/validators')
 const router = express.Router();
 
 

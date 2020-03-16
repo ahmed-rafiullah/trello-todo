@@ -11,7 +11,7 @@ module.exports = {
       user: config.db.DB_USER,
       password: config.db.DB_PASSWORD,
       database: config.db.DB_NAME,
-      debug: true
+      debug: false
 
     },
     migrations: {

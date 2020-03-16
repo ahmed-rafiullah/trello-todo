@@ -2,6 +2,7 @@
 // all logging is done here
 // if fatal restart the application other wise respond to error i.e send to mail
 
+const logger = require('../../configs/logging/winston')
 
 const {
     ValidationError,
@@ -21,7 +22,7 @@ function response(message, httpCode, fatal = false) {
         fatal: fatal,
         reponseCode: httpCode,
         payload: {
-            status: 'failed',
+            status: 'failedd',
             reason: message
         }
     }
@@ -29,7 +30,7 @@ function response(message, httpCode, fatal = false) {
 
 // here i handle my app errors and any other error
 async function errHandle(err) {
-    console.log(err)
+    logger.error('', err)
     if (err instanceof AppError) {
         // determine response payload here
         if (err.fatal === true) {

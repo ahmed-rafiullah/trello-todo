@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken')
 const {
     jwtValidator
-} = require('../utilities/jwtValidator')
+} = require('../utilities/validators')
 const config = require('../../configs/env/config')
 const AppError = require('../utilities/appError')
+
 const checkAuth = async (req, res, next) => {
     const authorizationHeader = req.header('Authorization')
     const token = authorizationHeader.split(' ')[1]
