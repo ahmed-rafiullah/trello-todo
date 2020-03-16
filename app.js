@@ -8,17 +8,6 @@ const cors = require('cors')
 const errorHandler = require('./components/utilities/globalErrorHandler')
 
 
-const {
-  knex,
-  dbCheckConnection
-} = require('./configs/db/db')
-
-const config = require('./configs/env/config')
-
-const {
-  Model
-} = require('objection');
-
 
 const swaggerUi = require('swagger-ui-express');
 const {
@@ -74,27 +63,6 @@ app.use(async (err, req, res, next) => {
 
 
 
-
-
-// if database is connected then run server
-dbCheckConnection().then(() => {
-  console.log('database connected')
-  Model.knex(knex);
-  app.listen(config.server.SERVER_PORT, () => {
-    // check for db connectivity if non exit process
-    console.info(`Server has started at ${config.server.SERVER_PORT}`);
-    // config objection
-
-  });
-})
-
-
-// FIXME: There is a bug in pm2 run ap.js using no daemon
-// and ctrcl-c. Run it again and then call npx pm2 stop ll
-
-
-// any error here is determined to cause an in
-
 process.addListener('unhandledRejection', (err) => {
   // log the error
   // fatal
@@ -112,6 +80,23 @@ process.addListener('uncaughtException', (err) => {
   console.log(2222222)
   process.exit(1)
 })
+
+
+
+
+
+module.exports = {
+  app
+}
+
+
+
+
+// FIXME: There is a bug in pm2 run ap.js using no daemon
+// and ctrcl-c. Run it again and then call npx pm2 stop ll
+
+
+
 
 
 

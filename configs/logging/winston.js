@@ -63,7 +63,6 @@ const logger = winston.createLogger({
 // If we're not in production then log to the `console`
 
 if (config.server.NODE_ENV !== 'production') {
-    console.log('aa')
     logger.add(new winston.transports.Console({
         format: consoleTransportFormat
     }));
