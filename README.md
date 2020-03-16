@@ -48,6 +48,7 @@ This app follows as close as possible node best practices https://github.com/gol
  * [x] Handle errors centrally, not within an Express middleware
  * [x] Document API errors using Swagger or GraphQL
  * [ ] Exit the process gracefully when a stranger comes to town
+ * [x] Use a mature logger to increase error visibility 
 #### Tech stack
 
 Uses Git flow for managing features.
