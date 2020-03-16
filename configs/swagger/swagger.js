@@ -26,6 +26,4 @@ const options = {
 const swaggerSpec = swaggerJSDoc(options);
 
 // require('../../swagger-schemas')
-module.exports = {
-    swaggerSpec
-}
+module.exports = swaggerSpec

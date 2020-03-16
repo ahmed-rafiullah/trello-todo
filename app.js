@@ -1,18 +1,27 @@
 const morgan = require('morgan');
 const express = require('express');
-const userRoute = require('./components/user/userController');
-const groupRoute = require('./components/group/groupController');
-const todoRoute = require('./components/todo/todoController');
+const {
+  userController
+} = require('./components/user');
+const {
+  groupController
+} = require('./components/group');
+const {
+  todoController
+} = require('./components/todo');
+
 const helmet = require('helmet');
 const cors = require('cors')
-const errorHandler = require('./components/utilities/globalErrorHandler')
+const {
+  globalErrorHandler: errorHandler
+} = require('./components/utilities')
 
 
 
 const swaggerUi = require('swagger-ui-express');
 const {
   swaggerSpec
-} = require('./configs/swagger/swagger')
+} = require('./configs')
 
 
 const options = {
@@ -30,9 +39,9 @@ app.use(express.urlencoded({
 app.use(express.json());
 app.use(morgan('combined'));
 app.use(helmet());
-app.use('/api/users', userRoute);
-app.use('/api/groups', groupRoute);
-app.use('/api/todos', todoRoute);
+app.use('/api/users', userController);
+app.use('/api/groups', groupController);
+app.use('/api/todos', todoController);
 
 // 404
 app.use((req, res) => {
@@ -66,19 +75,23 @@ app.use(async (err, req, res, next) => {
 process.addListener('unhandledRejection', (err) => {
   // log the error
   // fatal
-  console.log(err)
-  console.log('111111')
-  process.exit(1)
+  throw err
 })
 
 
 
-process.addListener('uncaughtException', (err) => {
+process.addListener('uncaughtException', async (err) => {
   // log the error
   // fatal
-  console.log(err)
-  console.log(2222222)
-  process.exit(1)
+  const errorResult = await errorHandler(err)
+
+
+  // exit app if fatal
+  if (errorResult.fatal === true) {
+    console.log('fatal error')
+    process.exit(1)
+  }
+
 })
 
 

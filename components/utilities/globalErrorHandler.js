@@ -2,7 +2,9 @@
 // all logging is done here
 // if fatal restart the application other wise respond to error i.e send to mail
 
-const logger = require('../../configs/logging/winston')
+const {
+    logger
+} = require('../../configs')
 
 const {
     ValidationError,

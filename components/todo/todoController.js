@@ -1,6 +1,8 @@
 const express = require('express');
 const Todo = require('./todoModel')
-const Groups = require('../group/groupModel')
+const {
+    Group: Groups
+} = require('../group/')
 const {
     todoValidator,
     todoUpdateValidator,
@@ -8,12 +10,13 @@ const {
 } = require('./todoValidators')
 const {
     idValidator
-} = require('../utilities/validators')
-const protectResource = require('../middlewares/auth')
-const router = express.Router();
+} = require('../utilities')
 const {
     ValidationError
 } = require('@hapi/joi')
+const protectResource = require('../middlewares')
+const router = express.Router();
+
 
 
 // create a todo belonging to current user

@@ -8,10 +8,11 @@ const {
 const router = express.Router();
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const protectResource = require('../middlewares/auth')
-const config = require('../../configs/env/config')
+const protectResource = require('../middlewares')
+const {
+  env: config
+} = require('../../configs/')
 const saltRounds = 10
-
 const UserService = require('./userService')
 
 

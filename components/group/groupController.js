@@ -1,5 +1,5 @@
 const express = require('express');
-const protectResource = require('../middlewares/auth')
+const protectResource = require('../middlewares')
 const {
     groupValidator,
     groupSearchQueryValidator
@@ -7,7 +7,7 @@ const {
 const Group = require('./groupModel')
 const {
     idValidator
-} = require('../utilities/validators')
+} = require('../utilities/')
 const router = express.Router();
 
 
@@ -42,7 +42,7 @@ router.get('/', protectResource, async (req, res) => {
 
         userGroupQueryBuilder = userGroupQueryBuilder.limit(count).offset(offset)
 
-        userGroups = await userGroupQueryBuilder
+        const userGroups = await userGroupQueryBuilder
 
 
         res.status(200).json({

@@ -1,9 +1,11 @@
 const {
     knex,
     dbCheckConnection
-} = require('./configs/db/db')
+} = require('./configs')
 
-const config = require('./configs/env/config')
+const {
+    env: config
+} = require('./configs')
 
 const {
     Model

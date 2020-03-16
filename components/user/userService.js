@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt')
-const AppError = require('../utilities/appError')
+const {
+    AppError
+} = require('../utilities')
 
 class UserService {
 

@@ -1,6 +1,8 @@
 const Joi = require('@hapi/joi');
 const passwordValidator = require('password-validator')
-const AppError = require('../utilities/appError')
+const {
+    AppError
+} = require('../utilities')
 
 const customPasswordValidator = (value, helpers) => {
     const passwordSchema = new passwordValidator();
