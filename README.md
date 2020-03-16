@@ -39,7 +39,7 @@ This app follows as close as possible node best practices https://github.com/gol
     * [x] Structure your solution by components
     * [x] Layer your components, keep Express within its boundaries
     * [ ] Wrap common utilities as npm packages
-    * [ ] Separate Express 'app' and 'server'
+    * [x] Separate Express 'app' and 'server'
     TODO:  Use environment aware, secure and hierarchical config
     * [ ] Use environment aware, secure and hierarchical config
 * Error Handling Practices
