@@ -60,7 +60,7 @@ router.post('/', protectResource, async (req, res) => {
 
 
             // construct select insert query
-            // select insert is a bit fucky 
+            // select insert is a bit finnicky 
             // https://runkit.com/embed/jzi2sqpb8pu6
             // https://github.com/knex/knex/commit/e74f43cfe57ab27b02250948f8706d16c5d821b8#diff-cb48f4af7c014ca6a7a2008c9d280573R608
 

@@ -72,11 +72,10 @@ app.use(async (err, req, res, next) => {
 
 
 
-process.addListener('unhandledRejection', (err) => {
-  // log the error
-  // fatal
-  throw err
+process.addListener('unhandledRejection', (error) => {
+  throw error
 })
+
 
 
 

@@ -24,7 +24,7 @@ function response(message, httpCode, fatal = false) {
         fatal: fatal,
         reponseCode: httpCode,
         payload: {
-            status: 'failedd',
+            status: 'failed',
             reason: message
         }
     }
@@ -46,45 +46,41 @@ async function errHandle(err) {
         // handle joi errors
         return response(err.message, 400)
 
-    } else if (err instanceof Objection.ValidationError) {
+    } else if (err instanceof ValidationError) {
         // https://vincit.github.io/objection.js/recipes/error-handling.html#examples
         // handles all objection related errors
         switch (err.type) {
             case 'ModelValidation':
                 return response(err.message, 400)
-                break;
             case 'RelationExpression':
                 return response('Internal Server Error', 500)
-                break;
             case 'UnallowedRelation':
-                return response('Internal Server Error', 500)
-                break;
+                return response('Internal Server Error', 500);
             case 'InvalidGraph':
                 return response('Internal Server Error', 500)
-                break;
             default:
                 // UnknownValidationError
-                return response('Internal Server Error', 500)
-                break;
+                return response('Internal Server Error', 500, true)
         }
-    } else if (err instanceof NotFoundError) {
-        return response(err.message, 404)
-    } else if (err instanceof UniqueViolationError) {
-        return response(err.message, 400)
-    } else if (err instanceof NotNullViolationError) {
-        return response(err.message, 400)
-    } else if (err instanceof ForeignKeyViolationError) {
+    } else if (err.constructor.name === "ConstraintViolationError") {
         return response('Internal Server Error', 500)
-    } else if (err instanceof CheckViolationError) {
+    } else if (err.constructor.name === "NotFoundError") {
         return response('Internal Server Error', 500)
-    } else if (err instanceof DataError) {
+    } else if (err.constructor.name === "UniqueViolationError") {
         return response('Internal Server Error', 500)
-    } else if (err instanceof DBError) {
+    } else if (err.constructor.name === "NotNullViolationError") {
+        return response('Internal Server Error', 500)
+    } else if (err.constructor.name === "ForeignKeyViolationError") {
+        return response('Internal Server Error', 500)
+    } else if (err.constructor.name === "CheckViolationError") {
+        return response('Internal Server Error', 500)
+    } else if (err.constructor.name === "DataError") {
+        return response('Internal Server Error', 500)
+    } else if (err.constructor.name === "DBError") {
         return response('Internal Server Error', 500)
     } else {
         // unknown error cannot determine if fatal so we set it as fatal by default
         return response('Internal Server Error', 500, true)
-
     }
 
 }

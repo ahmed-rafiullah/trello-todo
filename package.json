@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "debug": "nodemon --inspect server.js",
-    "test": "jest"
+    "test": "jest --runInBand --verbose",
+    "debug-test": "node --inspect-brk node_modules/.bin/jest --runInBand --verbose"
   },
   "engines": {
     "node": ">=11.5.0"
@@ -35,6 +36,7 @@
     "winston-daily-rotate-file": "4.4.2"
   },
   "devDependencies": {
+    "@types/jest": "25.1.4",
     "eslint": "6.1.0",
     "eslint-config-airbnb-base": "14.0.0",
     "eslint-config-node": "4.0.0",
