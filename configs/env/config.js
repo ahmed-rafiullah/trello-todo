@@ -4,9 +4,16 @@
 // https://blog.risingstack.com/node-js-project-structure-tutorial-node-js-at-scale/#wheretoputyourbuildandscriptfiles
 
 
-
+const appRoot = require('app-root-path')
 const Joi = require('@hapi/joi')
-const result = require('dotenv').config()
+const result = require('dotenv-flow').config({
+    path: `${appRoot}/envs`,
+    default_node_env: process.env.NODE_ENV || 'development'
+})
+
+
+
+
 const AppError = require('../../components/utilities/appError')
 
 
@@ -24,7 +31,6 @@ if (result.error) {
     'DB_NAME',
     'DB_USER',
     'DB_PASSWORD',
-    'NODE_ENV',
     'JWT_SECRET'
 ].forEach(name => {
     if (!process.env[name]) {
@@ -40,7 +46,6 @@ const envSchema = Joi.object().keys({
     DB_NAME: Joi.string().required(),
     DB_USER: Joi.string().required(),
     DB_PASSWORD: Joi.string().required(),
-    NODE_ENV: Joi.string().required().valid('development', 'production', 'staging'),
     JWT_SECRET: Joi.string().required(),
 
 }).unknown(false)
@@ -66,7 +71,6 @@ const config = {
     },
 
     server: {
-        NODE_ENV: validEnv.NODE_ENV,
         SERVER_PORT: validEnv.SERVER_PORT
     },
 
@@ -75,5 +79,6 @@ const config = {
     }
 }
 
+console.log(config)
 
 module.exports = config

@@ -1,6 +1,7 @@
-const config = require('../env/config')
 // default environment is development
-const environment = config.server.NODE_ENV || 'development'
+const environment = process.env.NODE_ENV || 'development'
+
+console.log('ENVIRONMENT: ' + environment)
 const knexConfig = require('./knexfile')[environment]
 console.log(knexConfig)
 const knex = require('knex')(knexConfig)

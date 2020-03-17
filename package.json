@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "debug": "nodemon --inspect server.js",
-    "test": "jest --runInBand --verbose",
-    "debug-test": "node --inspect-brk node_modules/.bin/jest --runInBand --verbose"
+    "start": "cross-env NODE_ENV=production node server.js",
+    "debug": "cross-env NODE_ENV=development nodemon --inspect server.js",
+    "test": "cross-env NODE_ENV=testing jest --runInBand --verbose",
+    "debug-test": "cross-env NODE_ENV=testing node --inspect-brk node_modules/.bin/jest --runInBand --verbose",
+    "pretest": "echo lolo pretest"
   },
   "engines": {
     "node": ">=11.5.0"
@@ -20,6 +21,7 @@
     "bcrypt": "3.0.8",
     "cors": "2.8.5",
     "dotenv": "8.2.0",
+    "dotenv-flow": "3.1.0",
     "express": "4.17.1",
     "express-session": "1.17.0",
     "helmet": "3.21.2",
@@ -37,6 +39,7 @@
   },
   "devDependencies": {
     "@types/jest": "25.1.4",
+    "cross-env": "7.0.2",
     "eslint": "6.1.0",
     "eslint-config-airbnb-base": "14.0.0",
     "eslint-config-node": "4.0.0",
