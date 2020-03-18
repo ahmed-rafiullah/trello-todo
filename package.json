@@ -4,13 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "pre-commit": "npm test",
-    "pre-push": "npm test",
     "start": "cross-env NODE_ENV=production node server.js",
     "debug": "cross-env NODE_ENV=development nodemon --inspect server.js",
     "test": "cross-env NODE_ENV=testing jest --runInBand --verbose",
     "debug-test": "cross-env NODE_ENV=testing node --inspect-brk node_modules/.bin/jest --runInBand --verbose",
     "pretest": "echo lolo pretest"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
   },
   "engines": {
     "node": ">=11.5.0"
