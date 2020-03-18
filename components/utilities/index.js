@@ -3,8 +3,8 @@ const globalErrorHandler = require('./globalErrorHandler')
 const validators = require('./validators')
 module.exports = {
 
-    AppError,
-    globalErrorHandler,
-    ...validators
+  AppError,
+  globalErrorHandler,
+  ...validators
 
 }

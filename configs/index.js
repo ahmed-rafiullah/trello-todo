@@ -5,9 +5,9 @@ const db = require('./db/db')
 const knexConfig = require('./db/knexfile')
 
 module.exports = {
-    env,
-    logger,
-    swaggerSpec,
-    ...db,
-    knexConfig
+  env,
+  logger,
+  swaggerSpec,
+  ...db,
+  knexConfig
 }

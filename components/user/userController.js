@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require('express')
 const UserModel = require('./userModel')
 const {
   userRegisterValidator,
   userLoginValidator,
   userPasswordChangeValidator
 } = require('./userValidators')
-const router = express.Router();
+const router = express.Router()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const protectResource = require('../middlewares')
@@ -15,8 +15,7 @@ const {
 const saltRounds = 10
 const UserService = require('./userService')
 
-
-// register a new user 
+// register a new user
 // router.post('/register', async (req, res) => {
 //   try {
 //     let user = await userRegisterValidator.validateAsync(req.body)
@@ -47,11 +46,9 @@ const UserService = require('./userService')
 
 // });
 
-
-
 router.post('/register', async (req, res, next) => {
   try {
-    let user = await userRegisterValidator.validateAsync(req.body)
+    const user = await userRegisterValidator.validateAsync(req.body)
 
     // do buisness logic
     const userService = new UserService(UserModel)
@@ -60,21 +57,17 @@ router.post('/register', async (req, res, next) => {
     // send success response job of express
     res.status(200).json({
       status: 'success',
-      result: "registered user successfullysss",
+      result: 'registered user successfullysss',
       user: result
     })
-
   } catch (err) {
     next(err)
   }
-
-});
-
+})
 
 // login user
 router.post('/login', async (req, res) => {
   try {
-
     const user = await userLoginValidator.validateAsync(req.body)
     const doesUserExist = await User.query().select().where({
       email: user.email
@@ -121,10 +114,7 @@ router.post('/login', async (req, res) => {
       reason: 'Internal Server Error'
     })
   }
-
-
-});
-
+})
 
 // change password belonging to current user
 router.post('/change-password', protectResource, async (req, res) => {
@@ -146,7 +136,6 @@ router.post('/change-password', protectResource, async (req, res) => {
       })
     }
 
-
     const passwordCheck = await bcrypt.compare(reset_password.old_password, user.password)
     if (passwordCheck === false) {
       return res.status(400).json({
@@ -163,8 +152,7 @@ router.post('/change-password', protectResource, async (req, res) => {
       })
     }
 
-
-    // check if old password and new passwords match 
+    // check if old password and new passwords match
     if (reset_password.old_password === reset_password.new_password ||
       reset_password.old_password === reset_password.new_password_again) {
       return res.status(400).json({
@@ -178,10 +166,10 @@ router.post('/change-password', protectResource, async (req, res) => {
     // hash the new password
     const new_password = await bcrypt.hash(reset_password.new_password, saltRounds)
 
-    //https://vincit.github.io/objection.js/api/query-builder/mutate-methods.html#insertwithrelatedandfetch
+    // https://vincit.github.io/objection.js/api/query-builder/mutate-methods.html#insertwithrelatedandfetch
     // update it
     const passwordUpdated = await User.query().patch({
-      password: new_password,
+      password: new_password
     }).findById(userID)
 
     // if updated
@@ -204,12 +192,10 @@ router.post('/change-password', protectResource, async (req, res) => {
       reason: 'Internal server error'
     })
   }
-});
-
+})
 
 // TODO: Add Deactivate or Delete account wont be needed for myjobportal
 // TODO: Add forgot password that will be need for myjobportal
-// TODO: Add centralized error handling 
+// TODO: Add centralized error handling
 
-
-module.exports = router;
+module.exports = router

@@ -2,10 +2,10 @@
 // const path = require('path')
 
 // NOTE: need to provide NODE_ENV=<environment> for making knex migrate work
-// the problem is just setting --env testing would use the testing db 
-// BUT the config would not use the .env.testing and .env.testing.local because NODE_ENV was not set 
+// the problem is just setting --env testing would use the testing db
+// BUT the config would not use the .env.testing and .env.testing.local because NODE_ENV was not set
 // and the config code needs that to be set to load the appropriate env files
-// so always use cross-env and set appropriate environment like so: 
+// so always use cross-env and set appropriate environment like so:
 // npx cross-env NODE_ENV=testing knex migrate:latest  --knexfile configs/db/knexfile.js
 // for seeds both cross-env and  and --env commands work
 const config = require('../env/config')
@@ -32,7 +32,6 @@ module.exports = {
 
   },
 
-
   testing: {
     client: 'mysql2',
     connection: {
@@ -50,7 +49,7 @@ module.exports = {
       directory: `${appRoot}/seeds/testing`
     }
 
-  },
+  }
 
   // staging: {
   //   client: 'postgresql',
@@ -84,4 +83,4 @@ module.exports = {
   //   }
   // }
 
-};
+}

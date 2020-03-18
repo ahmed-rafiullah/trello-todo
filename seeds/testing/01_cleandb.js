@@ -6,4 +6,4 @@ exports.seed = function (knex) {
     }).then(() => {
       return knex('users').del()
     })
-};
+}

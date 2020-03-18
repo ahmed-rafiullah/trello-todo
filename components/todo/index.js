@@ -1,7 +1,7 @@
- const Todo = require('./todoModel')
- const todoController = require('./todoController')
+const Todo = require('./todoModel')
+const todoController = require('./todoController')
 
- module.exports = {
-     Todo,
-     todoController
- }
+module.exports = {
+  Todo,
+  todoController
+}

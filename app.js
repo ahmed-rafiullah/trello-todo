@@ -1,55 +1,51 @@
-const morgan = require('morgan');
-const express = require('express');
+const morgan = require('morgan')
+const express = require('express')
 const {
   userController
-} = require('./components/user');
+} = require('./components/user')
 const {
   groupController
-} = require('./components/group');
+} = require('./components/group')
 const {
   todoController
-} = require('./components/todo');
+} = require('./components/todo')
 
-const helmet = require('helmet');
+const helmet = require('helmet')
 const cors = require('cors')
 const {
   globalErrorHandler: errorHandler
 } = require('./components/utilities')
 
-
-
-const swaggerUi = require('swagger-ui-express');
+const swaggerUi = require('swagger-ui-express')
 const {
   swaggerSpec
 } = require('./configs')
 
-
 const options = {
   explorer: true
-};
+}
 
+const app = express()
 
-const app = express();
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, options));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, options))
 app.use(cors())
 app.use(express.urlencoded({
   extended: false
-}));
-app.use(express.json());
-app.use(morgan('combined'));
-app.use(helmet());
-app.use('/api/users', userController);
-app.use('/api/groups', groupController);
-app.use('/api/todos', todoController);
+}))
+app.use(express.json())
+app.use(morgan('combined'))
+app.use(helmet())
+app.use('/api/users', userController)
+app.use('/api/groups', groupController)
+app.use('/api/todos', todoController)
 
 // 404
 app.use((req, res) => {
   // HTTP status 404: NotFound
   res.status(404).json({
     error: '404 Not Found'
-  });
-});
+  })
+})
 
 // All other errors are handled here
 app.use(async (err, req, res, next) => {
@@ -57,61 +53,40 @@ app.use(async (err, req, res, next) => {
   // use centralized error handler here
   const errorResult = await errorHandler(err)
 
-
   // exit app if fatal
   if (errorResult.fatal === true) {
     console.log('fatal error')
     process.exit(1)
   }
 
-  // other wise 
+  // other wise
   res.status(errorResult.reponseCode).json({
     ...errorResult.payload
-  });
-});
-
-
+  })
+})
 
 process.addListener('unhandledRejection', (error) => {
   throw error
 })
-
-
-
 
 process.addListener('uncaughtException', async (err) => {
   // log the error
   // fatal
   const errorResult = await errorHandler(err)
 
-
   // exit app if fatal
   if (errorResult.fatal === true) {
     console.log('fatal error')
     process.exit(1)
   }
-
 })
-
-
-
-
 
 module.exports = {
   app
 }
 
-
-
-
 // FIXME: There is a bug in pm2 run ap.js using no daemon
 // and ctrcl-c. Run it again and then call npx pm2 stop ll
-
-
-
-
-
-
 
 /*
 Login
@@ -136,12 +111,11 @@ CRUD on todo statuses
 
 /*
 
-
 Understand sql more and learn sequelize fcking
 Add validation middleware
 Add Linter - DONE
 Add formatter - DONE
-Add precommit or pre push hooks to ensure formatting and linting 
+Add precommit or pre push hooks to ensure formatting and linting
 Add Authentication - using all kinds of methods and sheeet - Start with jwt cuz das easiest !
 Restructor App
 
@@ -152,6 +126,6 @@ Add Swagger Docs
 Learn advanced js
 Do all the above in typescript
 Dockerify this app
-And add ci cd 
+And add ci cd
 And then deploy it
 */

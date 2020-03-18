@@ -15,4 +15,4 @@ const dbCheckConnection = () => {
 module.exports = {
   knex,
   dbCheckConnection
-};
+}
