@@ -1,5 +1,5 @@
 const express = require('express')
-const UserModel = require('./userModel')
+const User = require('./userModel')
 const {
   userRegisterValidator,
   userLoginValidator,
@@ -51,13 +51,13 @@ router.post('/register', async (req, res, next) => {
     const user = await userRegisterValidator.validateAsync(req.body)
 
     // do buisness logic
-    const userService = new UserService(UserModel)
+    const userService = new UserService(User)
     const result = await userService.registerUser(user)
 
     // send success response job of express
     res.status(200).json({
       status: 'success',
-      result: 'registered user successfullysss',
+      result: 'registered user successfully',
       user: result
     })
   } catch (err) {
@@ -121,11 +121,11 @@ router.post('/change-password', protectResource, async (req, res) => {
   try {
     const userID = req.body._jwt_.xid
     // validate payload
-    const reset_password = await userPasswordChangeValidator.validateAsync(req.body, {
+    const resetPassword = await userPasswordChangeValidator.validateAsync(req.body, {
       stripUnknown: true
     })
 
-    console.log(reset_password)
+    console.log(resetPassword)
     // check if user even exists !
     const user = (await User.query().select('user_id', 'password').where('user_id', userID).limit(1))[0]
     // no user exists exit
@@ -136,7 +136,7 @@ router.post('/change-password', protectResource, async (req, res) => {
       })
     }
 
-    const passwordCheck = await bcrypt.compare(reset_password.old_password, user.password)
+    const passwordCheck = await bcrypt.compare(resetPassword.old_password, user.password)
     if (passwordCheck === false) {
       return res.status(400).json({
         status: 'failed',
@@ -145,7 +145,7 @@ router.post('/change-password', protectResource, async (req, res) => {
     }
 
     // check if both new and new again passwords match
-    if (reset_password.new_password_again !== reset_password.new_password) {
+    if (resetPassword.new_password_again !== resetPassword.new_password) {
       return res.status(400).json({
         status: 'failed',
         reason: 'new passwords must match'
@@ -153,8 +153,8 @@ router.post('/change-password', protectResource, async (req, res) => {
     }
 
     // check if old password and new passwords match
-    if (reset_password.old_password === reset_password.new_password ||
-      reset_password.old_password === reset_password.new_password_again) {
+    if (resetPassword.old_password === resetPassword.new_password ||
+      resetPassword.old_password === resetPassword.new_password_again) {
       return res.status(400).json({
         status: 'failed',
         reason: 'new password cannot be same as old password'
@@ -164,12 +164,12 @@ router.post('/change-password', protectResource, async (req, res) => {
     // password checks completed user is allowed to change their password
     console.log(user)
     // hash the new password
-    const new_password = await bcrypt.hash(reset_password.new_password, saltRounds)
+    const newPassword = await bcrypt.hash(resetPassword.new_password, saltRounds)
 
     // https://vincit.github.io/objection.js/api/query-builder/mutate-methods.html#insertwithrelatedandfetch
     // update it
     const passwordUpdated = await User.query().patch({
-      password: new_password
+      password: newPassword
     }).findById(userID)
 
     // if updated

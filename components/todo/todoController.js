@@ -170,13 +170,11 @@ router.get('/', protectResource, async (req, res) => {
 // get a todo belonging to current user
 router.get('/:id', protectResource, async (req, res) => {
   try {
-    const todo_id = await idValidator.validateAsync(req.params.id)
-    const user_id = req.body._jwt_.xid
-    console.log(user_id)
-    console.log(todo_id)
+    const todoID = await idValidator.validateAsync(req.params.id)
+    const userID = req.body._jwt_.xid
     const todos = await Todo.query().select(['todo_id', 'title', 'description', 'date_created']).where({
-      user_id,
-      todo_id
+      user_id: userID,
+      todo_id: todoID
     }).limit(1)
 
     // TODO: Add todo does not exist and return 404 error code
@@ -196,22 +194,22 @@ router.get('/:id', protectResource, async (req, res) => {
 // delete a todo belonging to current user
 router.delete('/:id', protectResource, async (req, res) => {
   try {
-    const todo_id = await idValidator.validateAsync(req.params.id)
-    const user_id = req.body._jwt_.xid
+    const todoID = await idValidator.validateAsync(req.params.id)
+    const userID = req.body._jwt_.xid
     const todos = await Todo.query().del().where({
-      user_id,
-      todo_id
+      user_id: userID,
+      todo_id: todoID
     })
 
     if (todos === 1) {
       res.status(200).json({
         status: 'success',
-        result: `delete todo with id ${todo_id}`
+        result: `delete todo with id ${todoID}`
       })
     } else {
       res.status(404).json({
         status: 'failed',
-        reason: `todo resource with id ${todo_id} does not exist`
+        reason: `todo resource with id ${todoID} does not exist`
       })
     }
   } catch (err) {
