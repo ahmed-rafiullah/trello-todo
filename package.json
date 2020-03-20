@@ -13,7 +13,9 @@
   "husky": {
     "hooks": {
       "pre-commit": "standard --fix  && npm test",
-      "pre-push": "standard --fix  && npm test"
+      "pre-push": "standard --fix  && npm test",
+      "pre-merge-commit": "standard --fix  && npm test"
+      
     }
   },
   "standard": {
