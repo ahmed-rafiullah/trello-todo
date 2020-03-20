@@ -3,8 +3,6 @@ require('winston-daily-rotate-file')
 const appRoot = require('app-root-path')
 // const config = require('../env/config')
 
-// s
-
 const globalTransportFormat = winston.format.combine(
   winston.format.timestamp(),
   winston.format.json(),
