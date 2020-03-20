@@ -1,7 +1,7 @@
 const winston = require('winston')
 require('winston-daily-rotate-file')
 const appRoot = require('app-root-path')
-const config = require('../env/config')
+// const config = require('../env/config')
 
 // s
 
