@@ -5,6 +5,9 @@ const request = supertest(app)
 
 test('POST /api/users/change-password | users change password should return 400 if no auth header present', async () => {
   const response = await request.post('/api/users/change-password')
+    .send({ })
+    .set('Accept', 'application/json')
+
   expect(response.status).toBe(400)
   expect(response.body).toEqual({
 

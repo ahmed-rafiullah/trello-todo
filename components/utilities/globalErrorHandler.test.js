@@ -23,7 +23,7 @@ test('should return correct response for non fatal AppError', async () => {
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 200,
+    responseCode: 200,
     payload: {
       status: 'failed',
       reason: 'some message'
@@ -37,7 +37,7 @@ test('should return correct response for FATAL AppError', async () => {
   expect(res).toEqual({
 
     fatal: true,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'some message'
@@ -51,7 +51,7 @@ test('error handler should return correct response for joi validation error', as
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 400,
+    responseCode: 400,
     payload: {
       status: 'failed',
       reason: expect.anything()
@@ -72,7 +72,7 @@ test('error handler should return correct response for Objection Validation Erro
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 400,
+    responseCode: 400,
     payload: {
       status: 'failed',
       reason: 'reason'
@@ -93,7 +93,7 @@ test('error handler should return correct response for Objection Validation Erro
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -114,7 +114,7 @@ test('error handler should return correct response for Objection Validation Erro
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -135,7 +135,7 @@ test('error handler should return correct response for Objection Validation Erro
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -156,7 +156,7 @@ test('error handler should return correct response for Objection Validation Erro
   expect(res).toEqual({
 
     fatal: true,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -190,7 +190,7 @@ test('error handler should return correct response for ConstraintViolationError'
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -205,7 +205,7 @@ test('error handler should return correct response for NotFoundError', async () 
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -223,7 +223,7 @@ test('error handler should return correct response for UniqueViolationError', as
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -241,7 +241,7 @@ test('error handler should return correct response for NotNullViolationError', a
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -259,7 +259,7 @@ test('error handler should return correct response for ForeignKeyViolationError'
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -277,7 +277,7 @@ test('error handler should return correct response for CheckViolationError', asy
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -295,7 +295,7 @@ test('error handler should return correct response for DataError', async () => {
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -313,7 +313,7 @@ test('error handler should return correct response for DBError', async () => {
   expect(res).toEqual({
 
     fatal: false,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'
@@ -328,7 +328,7 @@ test('error handler should return correct response for UNKNWOWN ERROR this shoul
   expect(res).toEqual({
 
     fatal: true,
-    reponseCode: 500,
+    responseCode: 500,
     payload: {
       status: 'failed',
       reason: 'Internal Server Error'

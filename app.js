@@ -56,11 +56,13 @@ app.use(async (err, req, res, next) => {
   // exit app if fatal
   if (errorResult.fatal === true) {
     console.log('fatal error')
+    // FIXME: not best practice what about running jobs or transactions ?
+    // use a modified circuit breaker pattern to fix this - baad me krna
     process.exit(1)
   }
 
   // other wise
-  res.status(errorResult.reponseCode).json({
+  res.status(errorResult.responseCode).json({
     ...errorResult.payload
   })
 })

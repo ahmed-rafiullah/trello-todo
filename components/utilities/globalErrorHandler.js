@@ -22,7 +22,7 @@ const AppError = require('./appError')
 function response (message, httpCode, fatal = false) {
   return {
     fatal: fatal,
-    reponseCode: httpCode,
+    responseCode: httpCode,
     payload: {
       status: 'failed',
       reason: message
