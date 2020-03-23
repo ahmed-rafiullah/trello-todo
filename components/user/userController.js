@@ -6,14 +6,9 @@ const {
   userPasswordChangeValidator
 } = require('./userValidators')
 const router = express.Router()
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const protectResource = require('../middlewares')
-const {
-  env: config
-} = require('../../configs/')
-const saltRounds = 10
 const UserService = require('./userService')
+const { AppError } = require('../utilities')
 
 // register a new user
 // router.post('/register', async (req, res) => {
@@ -48,11 +43,14 @@ const UserService = require('./userService')
 
 router.post('/register', async (req, res, next) => {
   try {
-    const user = await userRegisterValidator.validateAsync(req.body)
-
     // do buisness logic
+    const dataObj = {
+      body: req.body,
+      userRegisterValidator
+    }
+
     const userService = new UserService(User)
-    const result = await userService.registerUser(user)
+    const result = await userService.registerUser(dataObj)
 
     // send success response job of express
     res.status(200).json({
@@ -66,41 +64,65 @@ router.post('/register', async (req, res, next) => {
 })
 
 // login user
-router.post('/login', async (req, res) => {
+// router.post('/login', async (req, res) => {
+//   try {
+//     const user = await userLoginValidator.validateAsync(req.body)
+//     const doesUserExist = await User.query().select().where({
+//       email: user.email
+//     })
+
+//     // no user or email
+//     if (doesUserExist.length === 0) {
+//       return res.status(401).json({
+//         status: 'fail',
+//         reason: 'email or password is incorrect'
+//       })
+//     }
+
+//     // user does exist
+//     const passwordCheck = await bcrypt.compare(user.password, doesUserExist[0].password)
+
+//     if (passwordCheck === false) {
+//       return res.status(401).json({
+//         status: 'fail',
+//         reason: 'email or password is incorrect'
+//       })
+//     }
+
+//     // user password is correct generate the jwt
+//     const jwtToken = jwt.sign({
+//       xid: doesUserExist[0].user_id,
+//       name: `${doesUserExist[0].fname} ${doesUserExist[0].lname}`,
+//       email: doesUserExist[0].email
+//     }, config.security.JWT_SECRET, {
+//       expiresIn: '1h'
+//     })
+
+//     // return response with jwt token
+
+//     res.status(200).json({
+//       status: 'success',
+//       result: 'login successful',
+//       access_token: jwtToken
+//     })
+//   } catch (err) {
+//     console.log(err)
+//     res.status(500).json({
+//       status: 'failed',
+//       reason: 'Internal Server Error'
+//     })
+//   }
+// })
+
+router.post('/login', async (req, res, next) => {
   try {
-    const user = await userLoginValidator.validateAsync(req.body)
-    const doesUserExist = await User.query().select().where({
-      email: user.email
-    })
-
-    // no user or email
-    if (doesUserExist.length === 0) {
-      return res.status(401).json({
-        status: 'fail',
-        reason: 'email or password is incorrect'
-      })
+    const dataObj = {
+      body: req.body,
+      userLoginValidator
     }
 
-    // user does exist
-    const passwordCheck = await bcrypt.compare(user.password, doesUserExist[0].password)
-
-    if (passwordCheck === false) {
-      return res.status(401).json({
-        status: 'fail',
-        reason: 'email or password is incorrect'
-      })
-    }
-
-    // user password is correct generate the jwt
-    const jwtToken = jwt.sign({
-      xid: doesUserExist[0].user_id,
-      name: `${doesUserExist[0].fname} ${doesUserExist[0].lname}`,
-      email: doesUserExist[0].email
-    }, config.security.JWT_SECRET, {
-      expiresIn: '1h'
-    })
-
-    // return response with jwt token
+    const userService = new UserService(User)
+    const jwtToken = await userService.loginUser(dataObj)
 
     res.status(200).json({
       status: 'success',
@@ -108,70 +130,101 @@ router.post('/login', async (req, res) => {
       access_token: jwtToken
     })
   } catch (err) {
-    console.log(err)
-    res.status(500).json({
-      status: 'failed',
-      reason: 'Internal Server Error'
-    })
+    next(err)
   }
 })
 
 // change password belonging to current user
-router.post('/change-password', protectResource, async (req, res) => {
+// router.post('/change-password', protectResource, async (req, res) => {
+//   try {
+//     const userID = req.body._jwt_.xid
+//     // validate payload
+//     const resetPassword = await userPasswordChangeValidator.validateAsync(req.body, {
+//       stripUnknown: true
+//     })
+
+//     const dataObj = {
+//       body: req.body,
+//       userPasswordChangeValidator
+//     }
+//     console.log(resetPassword)
+//     // check if user even exists !
+//     const user = (await User.query().select('user_id', 'password').where('user_id', userID).limit(1))[0]
+//     // no user exists exit
+//     if (typeof user === 'undefined') {
+//       return res.status(404).json({
+//         status: 'failed',
+//         reason: 'user no longer exists'
+//       })
+//     }
+
+//     const passwordCheck = await bcrypt.compare(resetPassword.old_password, user.password)
+//     if (passwordCheck === false) {
+//       return res.status(400).json({
+//         status: 'failed',
+//         reason: 'incorrect password'
+//       })
+//     }
+
+//     // check if both new and new again passwords match
+//     if (resetPassword.new_password_again !== resetPassword.new_password) {
+//       return res.status(400).json({
+//         status: 'failed',
+//         reason: 'new passwords must match'
+//       })
+//     }
+
+//     // check if old password and new passwords match
+//     if (resetPassword.old_password === resetPassword.new_password ||
+//       resetPassword.old_password === resetPassword.new_password_again) {
+//       return res.status(400).json({
+//         status: 'failed',
+//         reason: 'new password cannot be same as old password'
+//       })
+//     }
+
+//     // password checks completed user is allowed to change their password
+//     console.log(user)
+//     // hash the new password
+//     const newPassword = await bcrypt.hash(resetPassword.new_password, saltRounds)
+
+//     // https://vincit.github.io/objection.js/api/query-builder/mutate-methods.html#insertwithrelatedandfetch
+//     // update it
+//     const passwordUpdated = await User.query().patch({
+//       password: newPassword
+//     }).findById(userID)
+
+//     // if updated
+//     if (passwordUpdated === 1) {
+//       res.status(200).json({
+//         status: 'success',
+//         result: 'password changed'
+//       })
+//     } else {
+//       // other wise something went wrong
+//       res.status(500).json({
+//         status: 'failed',
+//         reason: 'Internal server error'
+//       })
+//     }
+//   } catch (err) {
+//     console.log(err)
+//     res.status(500).json({
+//       status: 'failed',
+//       reason: 'Internal server error'
+//     })
+//   }
+// })
+
+router.post('/change-password', protectResource, async (req, res, next) => {
   try {
-    const userID = req.body._jwt_.xid
-    // validate payload
-    const resetPassword = await userPasswordChangeValidator.validateAsync(req.body, {
-      stripUnknown: true
-    })
-
-    console.log(resetPassword)
+    const dataObj = {
+      body: req.body,
+      userPasswordChangeValidator
+    }
     // check if user even exists !
-    const user = (await User.query().select('user_id', 'password').where('user_id', userID).limit(1))[0]
-    // no user exists exit
-    if (typeof user === 'undefined') {
-      return res.status(404).json({
-        status: 'failed',
-        reason: 'user no longer exists'
-      })
-    }
-
-    const passwordCheck = await bcrypt.compare(resetPassword.old_password, user.password)
-    if (passwordCheck === false) {
-      return res.status(400).json({
-        status: 'failed',
-        reason: 'incorrect password'
-      })
-    }
-
-    // check if both new and new again passwords match
-    if (resetPassword.new_password_again !== resetPassword.new_password) {
-      return res.status(400).json({
-        status: 'failed',
-        reason: 'new passwords must match'
-      })
-    }
-
-    // check if old password and new passwords match
-    if (resetPassword.old_password === resetPassword.new_password ||
-      resetPassword.old_password === resetPassword.new_password_again) {
-      return res.status(400).json({
-        status: 'failed',
-        reason: 'new password cannot be same as old password'
-      })
-    }
-
-    // password checks completed user is allowed to change their password
-    console.log(user)
-    // hash the new password
-    const newPassword = await bcrypt.hash(resetPassword.new_password, saltRounds)
-
-    // https://vincit.github.io/objection.js/api/query-builder/mutate-methods.html#insertwithrelatedandfetch
-    // update it
-    const passwordUpdated = await User.query().patch({
-      password: newPassword
-    }).findById(userID)
-
+    const userService = new UserService(User)
+    const passwordUpdated = await userService.changePassword(dataObj)
     // if updated
     if (passwordUpdated === 1) {
       res.status(200).json({
@@ -180,22 +233,14 @@ router.post('/change-password', protectResource, async (req, res) => {
       })
     } else {
       // other wise something went wrong
-      res.status(500).json({
-        status: 'failed',
-        reason: 'Internal server error'
-      })
+      throw AppError('Internal server error', 500)
     }
   } catch (err) {
-    console.log(err)
-    res.status(500).json({
-      status: 'failed',
-      reason: 'Internal server error'
-    })
+    next(err)
   }
 })
 
 // TODO: Add Deactivate or Delete account wont be needed for myjobportal
 // TODO: Add forgot password that will be need for myjobportal
-// TODO: Add centralized error handling
 
 module.exports = router

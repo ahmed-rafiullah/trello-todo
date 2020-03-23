@@ -16,3 +16,15 @@ test('POST /api/users/change-password | users change password should return 400 
 
   })
 })
+
+test('GET / | any unknown verb or route should give 404 not found json response', async () => {
+  const response = await request.get('/')
+
+  expect(response.status).toBe(404)
+  expect(response.body).toEqual({
+
+    status: 'failed',
+    reason: '404 Not Found'
+
+  })
+})

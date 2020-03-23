@@ -43,7 +43,8 @@ app.use('/api/todos', todoController)
 app.use((req, res) => {
   // HTTP status 404: NotFound
   res.status(404).json({
-    error: '404 Not Found'
+    status: 'failed',
+    reason: '404 Not Found'
   })
 })
 

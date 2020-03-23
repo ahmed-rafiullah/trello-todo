@@ -65,7 +65,8 @@ const config = {
   },
 
   security: {
-    JWT_SECRET: validEnv.JWT_SECRET
+    JWT_SECRET: validEnv.JWT_SECRET,
+    SALT_ROUNDS: 10
   }
 }
 
