@@ -53,7 +53,7 @@ router.post('/register', async (req, res, next) => {
     const result = await userService.registerUser(dataObj)
 
     // send success response job of express
-    res.status(200).json({
+    res.status(201).json({
       status: 'success',
       result: 'registered user successfully',
       user: result
