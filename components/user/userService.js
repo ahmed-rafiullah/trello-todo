@@ -12,17 +12,14 @@ class UserService {
   }
 
   async registerUser ({ body, userRegisterValidator }) {
-    // add additional logging statements that run only during devlopment
-    // use winston logger with a development level
-    // always throw the error we dont handle that here at all
     const user = await userRegisterValidator.validateAsync(body)
-    const password = await bcrypt.hash(user.password, 10)
     const emailExists = await this.UserModel.query().select('email').where('email', user.email).limit(1)
     if (emailExists.length > 0) {
       throw new AppError('email already exists', 400)
     } else {
-      user.password = password
-      const result = await this.User.query().insert(user)
+      user.password = await bcrypt.hash(user.password, config.security.SALT_ROUNDS) // if this is removed the plaintext password will saved in db
+      const result = await this.UserModel.query().insert(user)
+      delete result.password // if this removed then the encrypted password will be leaked
       return result
     }
   }
@@ -73,7 +70,6 @@ class UserService {
       throw AppError('email or password is incorrect', 401)
     }
 
-    // user does exist
     const passwordCheck = await bcrypt.compare(user.password, doesUserExist[0].password)
     if (passwordCheck === false) {
       throw AppError('email or password is incorrect', 401)
@@ -86,7 +82,6 @@ class UserService {
     }, config.security.JWT_SECRET, {
       expiresIn: '1h'
     })
-
     // the json response shape is responsibility of the router
     return jwtToken
   }
