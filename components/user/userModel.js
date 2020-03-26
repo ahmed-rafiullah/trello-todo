@@ -2,8 +2,7 @@
 //     BaseModel
 // } = require('../helpers/BaseModel');
 const {
-  Model,
-  snakeCaseMappers
+  Model
 } = require('objection')
 const Todo = require('../todo/todoModel')
 const {
@@ -11,12 +10,6 @@ const {
 } = require('../group')
 
 class User extends Model {
-  static get columnNameMappers () {
-    // If your columns are UPPER_SNAKE_CASE you can
-    // use snakeCaseMappers({ upperCase: true })
-    return snakeCaseMappers()
-  }
-
   // Table name is the only required property.
   static get tableName () {
     return 'users'
