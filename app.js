@@ -53,7 +53,8 @@ app.use(async (err, req, res, next) => {
   // HTTP status 404: NotFound
   // use centralized error handler here
   const errorResult = await errorHandler(err)
-
+  console.log(err)
+  console.log('hmmmmmmmmmmmmm')
   // exit app if fatal
   if (errorResult.fatal === true) {
     console.log('fatal error')
@@ -68,8 +69,16 @@ app.use(async (err, req, res, next) => {
   })
 })
 
-process.addListener('unhandledRejection', (error) => {
-  throw error
+process.addListener('unhandledRejection', async (err) => {
+  // log the error
+  // fatal
+  const errorResult = await errorHandler(err)
+
+  // exit app if fatal
+  if (errorResult.fatal === true) {
+    console.log('fatal error')
+    process.exit(1)
+  }
 })
 
 process.addListener('uncaughtException', async (err) => {
