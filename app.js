@@ -1,5 +1,6 @@
 const morgan = require('morgan')
 const express = require('express')
+
 const {
   userController
 } = require('./components/user')
@@ -18,7 +19,8 @@ const {
 
 const swaggerUi = require('swagger-ui-express')
 const {
-  swaggerSpec
+  swaggerSpec,
+  knex
 } = require('./configs')
 
 const options = {
@@ -53,11 +55,11 @@ app.use(async (err, req, res, next) => {
   // HTTP status 404: NotFound
   // use centralized error handler here
   const errorResult = await errorHandler(err)
-  console.log(err)
-  console.log('hmmmmmmmmmmmmm')
+
   // exit app if fatal
   if (errorResult.fatal === true) {
     console.log('fatal error')
+    await knex.destroy()
     // FIXME: not best practice what about running jobs or transactions ?
     // use a modified circuit breaker pattern to fix this - baad me krna
     process.exit(1)
@@ -76,7 +78,7 @@ process.addListener('unhandledRejection', async (err) => {
 
   // exit app if fatal
   if (errorResult.fatal === true) {
-    console.log('fatal error')
+    await knex.destroy()
     process.exit(1)
   }
 })
@@ -88,7 +90,7 @@ process.addListener('uncaughtException', async (err) => {
 
   // exit app if fatal
   if (errorResult.fatal === true) {
-    console.log('fatal error')
+    await knex.destroy()
     process.exit(1)
   }
 })
