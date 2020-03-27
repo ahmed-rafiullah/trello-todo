@@ -8,7 +8,7 @@ const knex = require('knex')(knexConfig)
 const { Model } = require('objection')
 Model.knex(knex) // set knex for objection
 
-knex.on('query', console.log)
+// knex.on('query', console.log)
 
 const dbCheckConnection = () => {
   return knex.raw('select 1+1 as result')
