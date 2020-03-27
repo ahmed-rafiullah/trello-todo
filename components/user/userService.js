@@ -32,24 +32,24 @@ class UserService {
       stripUnknown: true
     })
 
-    if (typeof user === 'undefined') {
-      throw AppError('user no longer exists', 404)
+    if (user === undefined) {
+      throw new AppError('user no longer exists', 404)
     }
 
     const passwordCheck = await bcrypt.compare(resetPassword.old_password, user.password)
     if (passwordCheck === false) {
-      throw AppError('incorrect password', 400)
+      throw new AppError('incorrect password', 400)
     }
 
     // check if both new and new again passwords match
     if (resetPassword.new_password_again !== resetPassword.new_password) {
-      throw AppError('new passwords must match', 400)
+      throw new AppError('new passwords must match', 400)
     }
 
     // check if old password and new passwords match
     if (resetPassword.old_password === resetPassword.new_password ||
       resetPassword.old_password === resetPassword.new_password_again) {
-      throw AppError('new password cannot be same as old password', 400)
+      throw new AppError('new password cannot be same as old password', 400)
     }
 
     const newPassword = await bcrypt.hash(resetPassword.new_password, config.security.SALT_ROUNDS)
@@ -67,12 +67,12 @@ class UserService {
     })
 
     if (doesUserExist.length === 0) {
-      throw AppError('email or password is incorrect', 401)
+      throw new AppError('email or password is incorrect', 401)
     }
 
     const passwordCheck = await bcrypt.compare(user.password, doesUserExist[0].password)
     if (passwordCheck === false) {
-      throw AppError('email or password is incorrect', 401)
+      throw new AppError('email or password is incorrect', 401)
     }
 
     const jwtToken = jwt.sign({
