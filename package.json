@@ -7,6 +7,7 @@
     "start": "cross-env NODE_ENV=production node server.js",
     "debug": "cross-env NODE_ENV=development nodemon --inspect server.js",
     "test": "cross-env NODE_ENV=testing jest --runInBand --verbose --detectOpenHandles",
+    "test-parallel": "cross-env NODE_ENV=testing jest  --verbose --detectOpenHandles",
     "debug-test": "cross-env NODE_ENV=testing node --inspect-brk node_modules/.bin/jest --runInBand --verbose --detectOpenHandles",
     "pretest": "echo lolo pretest"
   },
