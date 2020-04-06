@@ -27,6 +27,11 @@ const checkAuth = async (req, res, next) => {
       const decodedToken = jwt.decode(token)
       const validToken = await jwtValidator.validateAsync(decodedToken)
       req.body._jwt_ = validToken
+
+      Object.defineProperty(req.body, '_jwt_', { // make sure its not overwritten any where
+        writable: false
+      })
+
       next()
     }
   } catch (err) {
