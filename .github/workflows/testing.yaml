@@ -15,7 +15,7 @@ jobs:
     env:
       SERVER_PORT: 5678
       DB_HOST: 127.0.0.1
-      DB_PORT: 3306
+      DB_PORT: ${{ job.services.mysql.ports[3306] }}
       DB_NAME: todoapp_testing
       DB_USER: root
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
