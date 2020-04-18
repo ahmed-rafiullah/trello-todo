@@ -2,8 +2,7 @@
 
  [![Generic badge](https://img.shields.io/badge/Looking_for_job-Hire_me-green.svg?style=for-the-badge)](https://shields.io/)
 
-![license](https://img.shields.io/npm/l/m)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)  [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) ![Test App](https://github.com/AhmedKhattak/trello-todo/workflows/Test%20App/badge.svg)
-
+![license](https://img.shields.io/npm/l/m)  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)  [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) ![Tests](https://github.com/AhmedKhattak/trello-todo/workflows/Tests/badge.svg?branch=master)
 
 
 
