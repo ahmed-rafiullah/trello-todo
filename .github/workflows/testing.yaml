@@ -15,7 +15,7 @@ jobs:
     env:
       SERVER_PORT: 5678
       DB_HOST: 127.0.0.1
-      DB_PORT: ${{ job.services.mysql.ports[3306] }}
+      DB_PORT: 3306
       DB_NAME: todoapp_testing
       DB_USER: root
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -54,8 +54,12 @@ jobs:
       - name: Install dependencies using npm ci
         run: npm ci
       - name: Setup test database - migrate
+        env:
+          PORT: ${{ job.services.mysql.ports[3306] }}
         run: npm run migrate-latest-testing
       - name: Setup test database - seed
+        env:
+          PORT: ${{ job.services.mysql.ports[3306] }}
         run: npm run seed-latest-testing
       - name: Run jest tests
         run: npm test
