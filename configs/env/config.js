@@ -27,13 +27,10 @@ if (result.error) {
   'JWT_SECRET'
 ].forEach(name => {
   if (!process.env[name]) {
-    console.log(name,process.env[name])
+    console.log(name, process.env[name])
     throw new AppError(`Environment variable ${name} is missing`, 500, true)
   }
 })
-
-
-
 
 // create schemas to verify config object is correct
 
@@ -45,19 +42,14 @@ const dbSchema = Joi.object().keys({
   DB_PASSWORD: Joi.string().required()
 }).required()
 
-
 const serverSchema = Joi.object().keys({
-  SERVER_PORT: Joi.number().integer().greater(0).required(),
+  SERVER_PORT: Joi.number().integer().greater(0).required()
 }).required()
-
 
 const securitySchema = Joi.object().keys({
   JWT_SECRET: Joi.string().required(),
   SALT_ROUNDS: Joi.number().integer().min(10)
 }).required()
-
-
-
 
 const envSchema = Joi.object().keys({
   server: serverSchema,
@@ -86,13 +78,11 @@ const config = {
 }
 
 const {
-  error,
-  value: validEnv
+  error
 } = envSchema.validate(config)
 
 if (error) {
   throw new AppError(`Config validation error: ${error.message}`, 500, true)
 }
-
 
 module.exports = config

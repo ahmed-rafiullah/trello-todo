@@ -46,7 +46,7 @@ test('GET /api/groups | get groups response in correct format', async () => {
       {
         group_id: 8,
         group_name: 'done',
-        date_created: '2020-02-25T13:17:47.000Z',
+        date_created: expect.anything(),
         user_id: 16
       }
     ]
