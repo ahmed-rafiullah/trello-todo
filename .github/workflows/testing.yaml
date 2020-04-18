@@ -38,8 +38,8 @@ jobs:
           MYSQL_DATABASE: todoapp_testing
 
     steps:
-      - uses: actions/checkout@v2
-      - continue-on-error: false
+      - name: checkout
+        uses: actions/checkout@v2
       - name: Verify Mysql connection
         env:
           PORT: ${{ job.services.mysql.ports[3306] }}
