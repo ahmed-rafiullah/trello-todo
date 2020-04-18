@@ -41,6 +41,8 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
       - name: Verify Mysql connection
+        env:
+          PORT: ${{ job.services.mysql.ports[3307] }}
         run: |
           while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
             sleep 1
@@ -52,8 +54,12 @@ jobs:
       - name: Install dependencies using npm ci
         run: npm ci
       - name: Setup test database - migrate
+        env:
+          PORT: ${{ job.services.mysql.ports[3307] }}
         run: npm run migrate-latest-testing
       - name: Setup test database - seed
+        env:
+          PORT: ${{ job.services.mysql.ports[3307] }}
         run: npm run seed-latest-testing
       - name: Run jest tests
         run: npm test
