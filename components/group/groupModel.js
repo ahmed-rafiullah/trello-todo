@@ -1,9 +1,7 @@
 const {
   Model
 } = require('objection')
-const {
-  Todo
-} = require('../todo')
+
 
 class Group extends Model {
   // Table name is the only required property.
@@ -36,6 +34,9 @@ class Group extends Model {
   }
 
   static get relationMappings () {
+    const {
+      Todo
+    } = require('../todo') // circular dependency
     return {
       todos: {
 

@@ -1,0 +1,64 @@
+name: 'Test App'
+
+on:
+  push:
+  pull_request:
+    branches:
+      [master]
+
+jobs:
+
+  test:
+    name: 'Run all tests'
+    runs-on: ubuntu-latest 
+
+    env:
+      SERVER_PORT: 5678
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_NAME: todoapp_testing
+      DB_USER: root
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      JWT_SECRET:  ${{ secrets.JWT_SECRET }}
+
+    services:
+      mysql:
+        # the docker image
+        image: mysql:8.0.19
+        ports:
+          # map the port you can then access it like so ${{ job.services.<service name>.ports['4050'] }} service name
+          # is mysql in this case
+          # hostport:container port
+          - 3306 
+          # additional options to run health checks these options come from https://docs.docker.com/engine/reference/commandline/create/#options
+          # ctrl-f 'health' and you will see the options and their usage
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        env:
+          MYSQL_ROOT_PASSWORD:  ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: todoapp_testing
+
+    steps:
+      - name: Checkout the code 
+        uses: actions/checkout@v2
+      - continue-on-error: false
+      - name: Verify Mysql connection
+        env:
+          PORT: ${{ job.services.mysql.ports[3306] }}
+        run: |
+          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
+            sleep 1
+          done
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.16.x'
+      - name: Install dependencies using npm ci
+        run: npm ci
+      - name: Setup test database - migrate
+        run: npm run migrate-latest-testing
+      - name: Setup test database - seed
+        run: npm run seed-latest-testing
+      - name: Run jest tests
+        run: npm test
+
+
