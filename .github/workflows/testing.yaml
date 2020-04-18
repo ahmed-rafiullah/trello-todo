@@ -38,8 +38,7 @@ jobs:
           MYSQL_DATABASE: todoapp_testing
 
     steps:
-      - name: Checkout the code 
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - continue-on-error: false
       - name: Verify Mysql connection
         env:
