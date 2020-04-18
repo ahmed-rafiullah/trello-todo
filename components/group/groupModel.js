@@ -2,7 +2,6 @@ const {
   Model
 } = require('objection')
 
-
 class Group extends Model {
   // Table name is the only required property.
   static get tableName () {

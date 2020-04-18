@@ -123,7 +123,7 @@ class TodoService {
     return { todo, todoID }
   }
 
-  async createTodo ({ body, todoValidator, Groups }) {
+  async createTodo ({ body, todoValidator, GroupsModel }) {
     const userID = body._jwt_.xid
     let todo = await todoValidator.validateAsync(body, {
       stripUnknown: true
@@ -144,7 +144,7 @@ class TodoService {
       const knex = todoInstance.$knex()
 
       // check if user has any groups
-      const subquery = await Groups.query().select().distinct('group_id').where('user_id', userID)
+      const subquery = await GroupsModel.query().select().distinct('group_id').where('user_id', userID)
       // map subquery to array
       const subqueryArray = subquery.map(x => x.group_id)
       const doesGroupExistInSubquery = subqueryArray.find(e => e === todo.group_id)

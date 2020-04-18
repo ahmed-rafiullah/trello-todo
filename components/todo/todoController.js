@@ -1,9 +1,8 @@
 const express = require('express')
 const Todo = require('./todoModel')
+
 const TodoService = require('./todoService')
-const {
-  Group: Groups
-} = require('../group/')
+
 const {
   todoValidator,
   todoUpdateValidator,
@@ -15,6 +14,10 @@ const {
 
 const protectResource = require('../middlewares')
 const router = express.Router()
+
+const {
+  Group
+} = require('../group')
 
 // // create a todo belonging to current user
 // router.post('/', protectResource, async (req, res) => {
@@ -104,7 +107,7 @@ router.post('/', protectResource, async (req, res, next) => {
     const dataObj = {
       body: req.body,
       todoValidator,
-      Groups
+      GroupsModel: Group
     }
     const todoService = new TodoService(Todo)
     const result = await todoService.createTodo(dataObj)

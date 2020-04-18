@@ -76,6 +76,8 @@ async function errHandle (err) {
     return response('Internal Server Error', 500)
   } else if (err.constructor.name === 'DBError') {
     return response('Internal Server Error', 500)
+  } else if (err.constructor.name === 'TokenExpiredError') {
+    return response('Token expired', 400)
   } else {
     // unknown error cannot determine if fatal so we set it as fatal by default
     return response('Internal Server Error', 500, true)

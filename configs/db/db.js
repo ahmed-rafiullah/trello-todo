@@ -1,9 +1,8 @@
 // default environment is development
 const environment = process.env.NODE_ENV || 'development'
 
-console.log('ENVIRONMENT: ' + environment)
 const knexConfig = require('./knexfile')[environment]
-console.log(knexConfig)
+
 const knex = require('knex')(knexConfig)
 const { Model } = require('objection')
 Model.knex(knex) // set knex for objection

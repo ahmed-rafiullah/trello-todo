@@ -9,14 +9,15 @@
     "test": "cross-env NODE_ENV=testing jest --runInBand --verbose --detectOpenHandles",
     "test-parallel": "cross-env NODE_ENV=testing jest  --verbose --detectOpenHandles",
     "debug-test": "cross-env NODE_ENV=testing node --inspect-brk node_modules/.bin/jest --runInBand --verbose --detectOpenHandles",
-    "pretest": "echo lolo pretest"
+    "pretest": "echo lolo pretest",
+    "migrate-latest-testing": "npx cross-env NODE_ENV=testing knex migrate:latest  --knexfile configs/db/knexfile.js",
+    "seed-latest-testing": "npx cross-env NODE_ENV=testing knex seed:run  --knexfile configs/db/knexfile.js"
   },
   "husky": {
     "hooks": {
       "pre-commit": "standard --fix  && npm test",
       "pre-push": "standard --fix  && npm test",
       "pre-merge-commit": "standard --fix  && npm test"
-      
     }
   },
   "standard": {
@@ -46,6 +47,7 @@
     "mysql2": "2.1.0",
     "objection": "2.1.3",
     "password-validator": "5.0.3",
+    "pg": "^8.0.2",
     "pm2": "4.2.3",
     "swagger-jsdoc": "3.5.0",
     "swagger-ui-express": "4.1.3",
