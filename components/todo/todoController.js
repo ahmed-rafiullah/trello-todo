@@ -294,7 +294,8 @@ router.put('/:id', protectResource, async (req, res, next) => {
       idValidator,
       todoUpdateValidator,
       id: req.params.id,
-      body: req.body
+      body: req.body,
+      GroupsModel: Group
 
     }
 

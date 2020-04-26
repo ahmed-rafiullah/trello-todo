@@ -14,12 +14,6 @@
             "protocol": "inspector",
         },
         {
-            "type": "node",
-            "request": "attach",
-            "name": "Attach",
-            "port": 9229
-        },
-        {
             "name": "Debug Jest Tests",
             "type": "node",
             "request": "launch",
